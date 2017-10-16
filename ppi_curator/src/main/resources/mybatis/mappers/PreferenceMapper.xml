@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ppi.search.mapper.PreferenceMapper">
+  <resultMap id="BaseResultMap" type="com.ppi.search.pojo.Preference">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="version" jdbcType="BIGINT" property="version" />
+    <result column="preference_key" jdbcType="VARCHAR" property="preferenceKey" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.ppi.search.pojo.Preference">
+    <result column="preference_value" jdbcType="LONGVARCHAR" property="preferenceValue" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, version, preference_key
+  </sql>
+  <sql id="Blob_Column_List">
+    preference_value
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from preference
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from preference
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ppi.search.pojo.Preference">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into preference (version, preference_key, preference_value
+      )
+    values (#{version,jdbcType=BIGINT}, #{preferenceKey,jdbcType=VARCHAR}, #{preferenceValue,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ppi.search.pojo.Preference">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into preference
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="version != null">
+        version,
+      </if>
+      <if test="preferenceKey != null">
+        preference_key,
+      </if>
+      <if test="preferenceValue != null">
+        preference_value,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="version != null">
+        #{version,jdbcType=BIGINT},
+      </if>
+      <if test="preferenceKey != null">
+        #{preferenceKey,jdbcType=VARCHAR},
+      </if>
+      <if test="preferenceValue != null">
+        #{preferenceValue,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ppi.search.pojo.Preference">
+    update preference
+    <set>
+      <if test="version != null">
+        version = #{version,jdbcType=BIGINT},
+      </if>
+      <if test="preferenceKey != null">
+        preference_key = #{preferenceKey,jdbcType=VARCHAR},
+      </if>
+      <if test="preferenceValue != null">
+        preference_value = #{preferenceValue,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.ppi.search.pojo.Preference">
+    update preference
+    set version = #{version,jdbcType=BIGINT},
+      preference_key = #{preferenceKey,jdbcType=VARCHAR},
+      preference_value = #{preferenceValue,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ppi.search.pojo.Preference">
+    update preference
+    set version = #{version,jdbcType=BIGINT},
+      preference_key = #{preferenceKey,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="findBypreferenceKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from preference
+    where preference_key = #{preferenceKey,jdbcType=VARCHAR}
+  </select>
+</mapper>

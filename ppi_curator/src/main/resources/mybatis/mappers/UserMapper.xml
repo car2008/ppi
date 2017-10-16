@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ppi.search.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.ppi.search.pojo.User">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="version" jdbcType="BIGINT" property="version" />
+    <result column="account_expired" jdbcType="BIT" property="accountExpired" />
+    <result column="account_locked" jdbcType="BIT" property="accountLocked" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="enabled" jdbcType="BIT" property="enabled" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="password_expired" jdbcType="BIT" property="passwordExpired" />
+    <result column="unread" jdbcType="INTEGER" property="unread" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, version, account_expired, account_locked, description, email, enabled, name, 
+    password, password_expired, unread, username
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ppi.search.pojo.User">
+    insert into user (id, version, account_expired, 
+      account_locked, description, email, 
+      enabled, name, password, 
+      password_expired, unread, username
+      )
+    values (#{id,jdbcType=BIGINT}, #{version,jdbcType=BIGINT}, #{accountExpired,jdbcType=BIT}, 
+      #{accountLocked,jdbcType=BIT}, #{description,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{enabled,jdbcType=BIT}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{passwordExpired,jdbcType=BIT}, #{unread,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ppi.search.pojo.User">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="accountExpired != null">
+        account_expired,
+      </if>
+      <if test="accountLocked != null">
+        account_locked,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="enabled != null">
+        enabled,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="passwordExpired != null">
+        password_expired,
+      </if>
+      <if test="unread != null">
+        unread,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=BIGINT},
+      </if>
+      <if test="accountExpired != null">
+        #{accountExpired,jdbcType=BIT},
+      </if>
+      <if test="accountLocked != null">
+        #{accountLocked,jdbcType=BIT},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="enabled != null">
+        #{enabled,jdbcType=BIT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="passwordExpired != null">
+        #{passwordExpired,jdbcType=BIT},
+      </if>
+      <if test="unread != null">
+        #{unread,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ppi.search.pojo.User">
+    update user
+    <set>
+      <if test="version != null">
+        version = #{version,jdbcType=BIGINT},
+      </if>
+      <if test="accountExpired != null">
+        account_expired = #{accountExpired,jdbcType=BIT},
+      </if>
+      <if test="accountLocked != null">
+        account_locked = #{accountLocked,jdbcType=BIT},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="enabled != null">
+        enabled = #{enabled,jdbcType=BIT},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="passwordExpired != null">
+        password_expired = #{passwordExpired,jdbcType=BIT},
+      </if>
+      <if test="unread != null">
+        unread = #{unread,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ppi.search.pojo.User">
+    update user
+    set version = #{version,jdbcType=BIGINT},
+      account_expired = #{accountExpired,jdbcType=BIT},
+      account_locked = #{accountLocked,jdbcType=BIT},
+      description = #{description,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      enabled = #{enabled,jdbcType=BIT},
+      name = #{name,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      password_expired = #{passwordExpired,jdbcType=BIT},
+      unread = #{unread,jdbcType=INTEGER},
+      username = #{username,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="findByUsername" resultMap="BaseResultMap"	parameterType="string">
+		select
+		*
+		from
+		user u left join user_role ur on ur.user_id = u.id 
+		where u.username = #{username,jdbcType=VARCHAR}
+	</select>
+	
+</mapper>

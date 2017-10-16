@@ -1,0 +1,109 @@
+h2, .h2 {
+	font-size: 16px;
+}
+
+h4, .h3 {
+	font-size: 15px;
+}
+
+h4, .h4 {
+	font-size: 14px;
+}
+
+th, td {
+	white-space: nowrap;
+}
+
+div.dataTables_wrapper {
+    /*width: 800px;
+    margin: 0 auto;*/
+}
+
+.tab-content>.tab-pane {
+	padding-top: 20px;
+}
+
+.breadcrumb {
+	background-color: none;
+}
+
+.features-blocks .feature-block h3 {
+	padding-left: 0;
+	padding-bottom: 10px;
+}
+
+.features-blocks .feature-block p {
+	padding-left: 0;
+	padding-bottom: 5px;
+}
+
+.site-header .site-nav .main-menu > li.active > a {
+	/*color: #003a81;*/
+}
+
+.page-container .sidebar-menu .sidebar-user-info .user-link span, .page-container .sidebar-menu .sidebar-user-info .user-link strong {
+	font-size: 12px;
+}
+
+.page-container .sidebar-menu .sidebar-user-info .user-link strong {
+	font-size: 14px;
+}
+
+.page-container .sidebar-menu .sidebar-user-info .user-link {
+	text-align: center;
+}
+
+.page-container .sidebar-menu .sidebar-user-info .sui-normal a{
+	color: #ffffff;
+}
+
+.portfolio-widget {
+	margin: 10px 0;
+}
+
+section.breadcrumb {
+	padding: 25px 0;
+}
+
+section.breadcrumb h1 {
+	font-size: 22px;
+}
+
+.content-section {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.footer-widgets {
+	padding: 20px 0;
+}
+
+.site-header .site-nav .main-menu > li {
+	margin: 0 0;
+}
+
+.site-header .site-nav .main-menu > li > ul {
+	min-width: 180px;
+}
+
+.site-header .site-nav .main-menu > li ul li ul li {
+	margin: 10px 0 0 0;
+}
+
+.site-header .site-nav .main-menu > li ul li ul li ul li {
+	margin: 10px 0 0 0;
+}
+
+.login-page .login-header {
+	padding: 30px 0;
+}
+
+.btn-primar {
+	background-color: #369;
+	border-color: #369;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary {
+	background-color: #369;
+	border-color: #369;
+}

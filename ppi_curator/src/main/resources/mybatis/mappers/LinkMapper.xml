@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ppi.search.mapper.LinkMapper">
+  <resultMap id="BaseResultMap" type="com.ppi.search.pojo.Link">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="version" jdbcType="BIGINT" property="version" />
+    <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated" />
+    <result column="last_updated" jdbcType="TIMESTAMP" property="lastUpdated" />
+    <result column="rank" jdbcType="INTEGER" property="rank" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, version, date_created, last_updated, rank, title, url, user_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from link
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from link
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ppi.search.pojo.Link">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into link (version, date_created, last_updated, 
+      rank, title, url, user_id
+      )
+    values (#{version,jdbcType=BIGINT}, #{dateCreated,jdbcType=TIMESTAMP}, #{lastUpdated,jdbcType=TIMESTAMP}, 
+      #{rank,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ppi.search.pojo.Link">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into link
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="version != null">
+        version,
+      </if>
+      <if test="dateCreated != null">
+        date_created,
+      </if>
+      <if test="lastUpdated != null">
+        last_updated,
+      </if>
+      <if test="rank != null">
+        rank,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="version != null">
+        #{version,jdbcType=BIGINT},
+      </if>
+      <if test="dateCreated != null">
+        #{dateCreated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdated != null">
+        #{lastUpdated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rank != null">
+        #{rank,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ppi.search.pojo.Link">
+    update link
+    <set>
+      <if test="version != null">
+        version = #{version,jdbcType=BIGINT},
+      </if>
+      <if test="dateCreated != null">
+        date_created = #{dateCreated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdated != null">
+        last_updated = #{lastUpdated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="rank != null">
+        rank = #{rank,jdbcType=INTEGER},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ppi.search.pojo.Link">
+    update link
+    set version = #{version,jdbcType=BIGINT},
+      date_created = #{dateCreated,jdbcType=TIMESTAMP},
+      last_updated = #{lastUpdated,jdbcType=TIMESTAMP},
+      rank = #{rank,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="findAll"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from link
+  </select>
+</mapper>

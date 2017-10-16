@@ -1,0 +1,126 @@
+@font-face {
+	font-family: 'FontAwesomeCloud';
+	src:
+		url('../fonts/fontawesome-cloud-webfont.eot?v=4.0.0-pre-cloud');
+	src:
+		url('../fonts/fontawesome-cloud-webfont.eot?#iefix&v=4.0.0-pre-cloud')
+		format('embedded-opentype'),
+		url('../fonts/fontawesome-cloud-webfont.woff?v=4.0.0-pre-cloud')
+		format('woff'),
+		url('../fonts/fontawesome-cloud-webfont.ttf?v=4.0.0-pre-cloud')
+		format('truetype'),
+		url('../fonts/fontawesome-cloud-webfont.svg#fontawesomeregular?v=4.0.0-pre-cloud')
+		format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.fa-genome:before {
+	content: "\f700";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-read:before {
+	content: "\f701";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-variant:before {
+	content: "\f702";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-gene:before {
+	content: "\f703";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-project:before {
+	content: "\f704";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-projects:before {
+	content: "\f705";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-app:before {
+	content: "\f706";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-apps:before {
+	content: "\f707";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-applet:before {
+	content: "\f708";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-job:before {
+	content: "\f709";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-jobs:before {
+	content: "\f70a";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-workflow:before {
+	content: "\f70b";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-workflows:before {
+	content: "\f70c";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-pan:before {
+	content: "\f70d";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-drag-to-zoom:before {
+	content: "\f70e";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-chromosome:before {
+	content: "\f710";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-dna-spinner:before {
+	content: "\f711";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-trna:before {
+	content: "\f712";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-mapping:before {
+	content: "\f713";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-cytoband:before {
+	content: "\f714";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-cloud-x:before {
+	content: "\f715";
+	font-family: FontAwesomeCloud;
+}
+
+.fa-cloud-x-sign:before {
+	content: "\f716";
+	font-family: FontAwesomeCloud;
+}
