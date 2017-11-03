@@ -15,20 +15,20 @@ import com.ppi.search.service.SearchService;
 @Controller
 public class SearchController {
 
-    @Autowired
+    /*@Autowired
     private SearchService searchService;
 
-    /**
+    *//**
      * 通过关键字搜索
      * 
      * @param keyWords
      * @return
-     */
+     *//*
     @RequestMapping(value = "search", method = RequestMethod.POST)
     @ResponseBody
     public SysResult search(@RequestParam("keyWords") String keyWords, @RequestParam("page") Integer page,
             @RequestParam("rows") Integer rows) {
         return this.searchService.search(keyWords, page, rows);
-    }
+    }*/
     
 }

@@ -43,4 +43,16 @@ public class PasswordHelper {
                 hashIterations).toHex();
         user.setPassword(newPassword);
     }
+    public static void main(String[] args) {
+    	System.out.println(new SimpleHash(
+    			"md5",
+                "123456",
+                ByteSource.Util.bytes("admin"),//加盐
+                2).toHex());
+    	System.out.println(new SimpleHash(
+    			"md5",
+                "123456",
+                ByteSource.Util.bytes("user"),//加盐
+                2).toHex());
+    }  
 }

@@ -14,7 +14,7 @@ import com.ppi.common.SysResult;
 @Service
 public class SearchService {
 
-    @Autowired
+   /* @Autowired
     private HttpSolrServer httpSolrServer;
 
     public SysResult search(String keyWords, Integer page, Integer rows) {
@@ -54,6 +54,6 @@ public class SearchService {
             e.printStackTrace();
         }
         return SysResult.build(201, "搜索错误!");
-    }
+    }*/
 
 }

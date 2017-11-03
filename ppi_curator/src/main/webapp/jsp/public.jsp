@@ -221,11 +221,9 @@ div.label {
 										<i class="entypo-user"></i> <span class="loggedInUserName"><shiro:principal /></span>
 								</span>
 								</a>
-			                          |
-			                          <a href="#"
-									style="margin: 0 7px; color: #fff;"> <i
-									class="fa fa-fw fa-wrench"></i> Management
-								</a>
+			                    <shiro:hasRole name="ROLE_ADMIN">      |
+			                          <a href="#" style="margin: 0 7px; color: #fff;"> <i class="fa fa-fw fa-wrench"></i> Management </a>
+								</shiro:hasRole> 
 			                          |
 			                          <a href="${pageContext.request.contextPath}/logout"
 									style="margin: 0 7px; color: #fff;"> <i
