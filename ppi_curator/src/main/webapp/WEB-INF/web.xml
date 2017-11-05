@@ -5,9 +5,8 @@
     <param-name>contextConfigLocation</param-name>
     <param-value>classpath:spring/spring-*.xml</param-value>
   </context-param>
-  <!-- 可以使用RequestContextHolder.currentRequestAttributes() 获取到请求的attr -->
   <listener>
-      <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
   </listener>
   <listener>
     <description>spring监听器</description>
@@ -16,16 +15,6 @@
   <listener>
     <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
   </listener>
-  <!-- spring-cxf的配置文件 -->
-  <!-- <servlet>
-		<servlet-name>CXFServlet</servlet-name>
-		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
-		<load-on-startup>2</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>CXFServlet</servlet-name>
-		<url-pattern>/*</url-pattern>
-	</servlet-mapping> --> 
   <filter>
     <description>字符集过滤器</description>
     <filter-name>encodingFilter</filter-name>
@@ -40,25 +29,21 @@
     <filter-name>encodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-  <!-- 配置 Shiro 的 Filter -->
   <filter>
-		<description>shiro 权限拦截</description>
-		<filter-name>shiroFilter</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-		<async-supported>true</async-supported>
-		<init-param>
-			<param-name>targetFilterLifecycle</param-name>
-			<param-value>true</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>shiroFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-	</filter-mapping> 
-  <!-- <session-config>
-    <session-timeout>60</session-timeout>
-  </session-config> -->
+    <description>shiro 权限拦截</description>
+    <filter-name>shiroFilter</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    <async-supported>true</async-supported>
+    <init-param>
+      <param-name>targetFilterLifecycle</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>shiroFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+  </filter-mapping>
   <servlet>
     <description>spring mvc servlet</description>
     <servlet-name>springMvc</servlet-name>
@@ -74,7 +59,4 @@
     <servlet-name>springMvc</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
-  <!-- <welcome-file-list>
-    <welcome-file>index</welcome-file>
-  </welcome-file-list> -->
 </web-app>

@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.ppi.parent</groupId>
-  <artifactId>ppi-parent</artifactId>
+  <artifactId>ppi_curator</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
 
-  <name>ppi-parent</name>
+  <name>ppi_curator</name>
   <url>http://maven.apache.org</url>
 
 
@@ -303,7 +303,11 @@
 			<artifactId>solr-solrj</artifactId>
 			<version>5.2.1</version>
 		</dependency>
-        
+        <dependency>	
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.3.2</version>
+		</dependency>
     </dependencies>
 
 	<build>

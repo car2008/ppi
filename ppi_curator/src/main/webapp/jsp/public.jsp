@@ -238,7 +238,7 @@ div.label {
 				<div class="col-md-12">
 					<header class="site-header"> 
 						<section class="site-logo">
-							<form action="" method="get">
+							<form action="search" method="post" controller="search">
 								<table style="width: 100%;">
 									<tr>
 										<td style="width: 200px;" rowspan="2"><a href="${pageContext.request.contextPath}"> <img
@@ -255,13 +255,14 @@ div.label {
 		                                            </select>
 		                                        </td>
 		                                         -->
-										<td style="text-align: center; padding: 0 2px;"><input
-											type="hidden" name="t" value="${params.t}" /> <input name="q"
-											style="border: 1px solid #aaaaaa; width: 100%; margin-right: 3px;"
-											placeholder="Enter keywords to search" /></td>
+										<td style="text-align: center; padding: 0 2px;">
+											<input type="hidden" name="t" value="${params.t}" /> 
+											<input name="keyWords"	style="border: 1px solid #aaaaaa; width: 100%; margin-right: 3px;" placeholder="Enter keywords to search" />
+											<input type="hidden" name="page" value="1" /> 
+											<input type="hidden" name="rows" value="10" /> 
+										</td>
 										<td style="width: 80px; padding: 0 2px;">
-											<button type="submit" class="btn btn-xs btn-primary"
-												onclick="initSearch(); return true;">Search</button>
+											<button type="submit" class="btn btn-xs btn-primary" onclick="initSearch(); return true;">Search</button>
 										</td>
 									</tr>
 									<tr>

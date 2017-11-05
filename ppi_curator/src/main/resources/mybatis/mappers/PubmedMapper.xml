@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ppi.search.mapper.PubmedMapper">
+  <resultMap id="BaseResultMap" type="com.ppi.search.pojo.Pubmed">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="version" jdbcType="BIGINT" property="version" />
+    <result column="abstract_" jdbcType="VARCHAR" property="abstractContents" />
+    <result column="date" jdbcType="TIMESTAMP" property="date" />
+    <result column="journal" jdbcType="VARCHAR" property="journal" />
+    <result column="score" jdbcType="DOUBLE" property="score" />
+    <result column="taxonomy_id" jdbcType="VARCHAR" property="taxonomyId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, version, abstract_, date, journal, score, taxonomy_id, title
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from pubmed
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from pubmed
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ppi.search.pojo.Pubmed">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pubmed (version, abstract_, date, 
+      journal, score, taxonomy_id, 
+      title)
+    values (#{version,jdbcType=BIGINT}, #{abstractContents,jdbcType=VARCHAR}, #{date,jdbcType=TIMESTAMP}, 
+      #{journal,jdbcType=VARCHAR}, #{score,jdbcType=DOUBLE}, #{taxonomyId,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ppi.search.pojo.Pubmed">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pubmed
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="version != null">
+        version,
+      </if>
+      <if test="abstractContents != null">
+        abstract_,
+      </if>
+      <if test="date != null">
+        date,
+      </if>
+      <if test="journal != null">
+        journal,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="taxonomyId != null">
+        taxonomy_id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="version != null">
+        #{version,jdbcType=BIGINT},
+      </if>
+      <if test="abstractContents != null">
+        #{abstractContents,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="journal != null">
+        #{journal,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="taxonomyId != null">
+        #{taxonomyId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ppi.search.pojo.Pubmed">
+    update pubmed
+    <set>
+      <if test="version != null">
+        version = #{version,jdbcType=BIGINT},
+      </if>
+      <if test="abstractContents != null">
+        abstract_ = #{abstractContents,jdbcType=VARCHAR},
+      </if>
+      <if test="date != null">
+        date = #{date,jdbcType=TIMESTAMP},
+      </if>
+      <if test="journal != null">
+        journal = #{journal,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="taxonomyId != null">
+        taxonomy_id = #{taxonomyId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ppi.search.pojo.Pubmed">
+    update pubmed
+    set version = #{version,jdbcType=BIGINT},
+      abstract_ = #{abstractContents,jdbcType=VARCHAR},
+      date = #{date,jdbcType=TIMESTAMP},
+      journal = #{journal,jdbcType=VARCHAR},
+      score = #{score,jdbcType=DOUBLE},
+      taxonomy_id = #{taxonomyId,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
  
 <generatorConfiguration>
-	 <classPathEntry location="C:/Users/czp/.m2/repository/mysql/mysql-connector-java/5.1.21/mysql-connector-java-5.1.21.jar"/> 
+	 <classPathEntry location="C:/Users/Administrator/.m2/repository/mysql/mysql-connector-java/5.1.21/mysql-connector-java-5.1.21.jar"/> 
      <!-- 参考博客http://blog.csdn.net/isea533/article/details/42102297，根据实际情况有改动 -->
      <context id="MysqlContext" targetRuntime="MyBatis3" defaultModelType="conditional">
         <property name="beginningDelimiter" value="`"/>
@@ -35,10 +35,13 @@
 			enableUpdateByExample="false" selectByExampleQueryId="false">
 			<generatedKey column="id" sqlStatement="Mysql" type="post" identity="true"/>
 		</table> -->
-		<table tableName="taxonomy"  enableCountByExample="false"
+		<table tableName="pubmed"  enableCountByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			enableUpdateByExample="false" selectByExampleQueryId="false">
 			<generatedKey column="id" sqlStatement="Mysql" type="post" identity="true"/>
+			<columnOverride column="abstract_" property="abstractContents" javaType="java.lang.String" jdbcType="VARCHAR" />
+			<columnOverride column="journal" property="journal" javaType="java.lang.String" jdbcType="VARCHAR" />
+			<columnOverride column="title" property="title" javaType="java.lang.String" jdbcType="VARCHAR" /> 
 		</table>
     </context>
 </generatorConfiguration>
