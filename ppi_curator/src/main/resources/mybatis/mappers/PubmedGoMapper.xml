@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ppi.search.mapper.PubmedGoMapper">
+  <resultMap id="BaseResultMap" type="com.ppi.search.pojo.PubmedGoKey">
+    <id column="pubmed_id" jdbcType="VARCHAR" property="pubmedId" />
+    <id column="go_id" jdbcType="VARCHAR" property="goId" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="com.ppi.search.pojo.PubmedGoKey">
+    delete from pubmed_gos
+    where pubmed_id = #{pubmedId,jdbcType=VARCHAR}
+      and go_id = #{goId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ppi.search.pojo.PubmedGoKey">
+    insert into pubmed_gos (pubmed_id, go_id)
+    values (#{pubmedId,jdbcType=VARCHAR}, #{goId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ppi.search.pojo.PubmedGoKey">
+    insert into pubmed_gos
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="pubmedId != null">
+        pubmed_id,
+      </if>
+      <if test="goId != null">
+        go_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="pubmedId != null">
+        #{pubmedId,jdbcType=VARCHAR},
+      </if>
+      <if test="goId != null">
+        #{goId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

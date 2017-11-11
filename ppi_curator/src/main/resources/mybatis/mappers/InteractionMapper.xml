@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ppi.search.mapper.InteractionMapper">
+  <resultMap id="BaseResultMap" type="com.ppi.search.pojo.Interaction">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="version" jdbcType="BIGINT" property="version" />
+    <result column="direction" jdbcType="VARCHAR" property="direction" />
+    <result column="effect" jdbcType="VARCHAR" property="effect" />
+    <result column="normalized_verb" jdbcType="VARCHAR" property="normalizedVerb" />
+    <result column="protein1" jdbcType="VARCHAR" property="protein1" />
+    <result column="protein2" jdbcType="VARCHAR" property="protein2" />
+    <result column="pubmed_id" jdbcType="VARCHAR" property="pubmedId" />
+    <result column="score" jdbcType="DOUBLE" property="score" />
+    <result column="sentence_id" jdbcType="VARCHAR" property="sentenceId" />
+    <result column="verb" jdbcType="VARCHAR" property="verb" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.ppi.search.pojo.Interaction">
+    <result column="info" jdbcType="LONGVARCHAR" property="info" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, version, direction, effect, normalized_verb, protein1, protein2, pubmed_id, score, 
+    sentence_id, verb
+  </sql>
+  <sql id="Blob_Column_List">
+    info
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from interaction
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from interaction
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ppi.search.pojo.Interaction">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into interaction (version, direction, effect, 
+      normalized_verb, protein1, protein2, 
+      pubmed_id, score, sentence_id, 
+      verb, info)
+    values (#{version,jdbcType=BIGINT}, #{direction,jdbcType=VARCHAR}, #{effect,jdbcType=VARCHAR}, 
+      #{normalizedVerb,jdbcType=VARCHAR}, #{protein1,jdbcType=VARCHAR}, #{protein2,jdbcType=VARCHAR}, 
+      #{pubmedId,jdbcType=VARCHAR}, #{score,jdbcType=DOUBLE}, #{sentenceId,jdbcType=VARCHAR}, 
+      #{verb,jdbcType=VARCHAR}, #{info,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ppi.search.pojo.Interaction">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into interaction
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="version != null">
+        version,
+      </if>
+      <if test="direction != null">
+        direction,
+      </if>
+      <if test="effect != null">
+        effect,
+      </if>
+      <if test="normalizedVerb != null">
+        normalized_verb,
+      </if>
+      <if test="protein1 != null">
+        protein1,
+      </if>
+      <if test="protein2 != null">
+        protein2,
+      </if>
+      <if test="pubmedId != null">
+        pubmed_id,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="sentenceId != null">
+        sentence_id,
+      </if>
+      <if test="verb != null">
+        verb,
+      </if>
+      <if test="info != null">
+        info,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="version != null">
+        #{version,jdbcType=BIGINT},
+      </if>
+      <if test="direction != null">
+        #{direction,jdbcType=VARCHAR},
+      </if>
+      <if test="effect != null">
+        #{effect,jdbcType=VARCHAR},
+      </if>
+      <if test="normalizedVerb != null">
+        #{normalizedVerb,jdbcType=VARCHAR},
+      </if>
+      <if test="protein1 != null">
+        #{protein1,jdbcType=VARCHAR},
+      </if>
+      <if test="protein2 != null">
+        #{protein2,jdbcType=VARCHAR},
+      </if>
+      <if test="pubmedId != null">
+        #{pubmedId,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="sentenceId != null">
+        #{sentenceId,jdbcType=VARCHAR},
+      </if>
+      <if test="verb != null">
+        #{verb,jdbcType=VARCHAR},
+      </if>
+      <if test="info != null">
+        #{info,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ppi.search.pojo.Interaction">
+    update interaction
+    <set>
+      <if test="version != null">
+        version = #{version,jdbcType=BIGINT},
+      </if>
+      <if test="direction != null">
+        direction = #{direction,jdbcType=VARCHAR},
+      </if>
+      <if test="effect != null">
+        effect = #{effect,jdbcType=VARCHAR},
+      </if>
+      <if test="normalizedVerb != null">
+        normalized_verb = #{normalizedVerb,jdbcType=VARCHAR},
+      </if>
+      <if test="protein1 != null">
+        protein1 = #{protein1,jdbcType=VARCHAR},
+      </if>
+      <if test="protein2 != null">
+        protein2 = #{protein2,jdbcType=VARCHAR},
+      </if>
+      <if test="pubmedId != null">
+        pubmed_id = #{pubmedId,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="sentenceId != null">
+        sentence_id = #{sentenceId,jdbcType=VARCHAR},
+      </if>
+      <if test="verb != null">
+        verb = #{verb,jdbcType=VARCHAR},
+      </if>
+      <if test="info != null">
+        info = #{info,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.ppi.search.pojo.Interaction">
+    update interaction
+    set version = #{version,jdbcType=BIGINT},
+      direction = #{direction,jdbcType=VARCHAR},
+      effect = #{effect,jdbcType=VARCHAR},
+      normalized_verb = #{normalizedVerb,jdbcType=VARCHAR},
+      protein1 = #{protein1,jdbcType=VARCHAR},
+      protein2 = #{protein2,jdbcType=VARCHAR},
+      pubmed_id = #{pubmedId,jdbcType=VARCHAR},
+      score = #{score,jdbcType=DOUBLE},
+      sentence_id = #{sentenceId,jdbcType=VARCHAR},
+      verb = #{verb,jdbcType=VARCHAR},
+      info = #{info,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ppi.search.pojo.Interaction">
+    update interaction
+    set version = #{version,jdbcType=BIGINT},
+      direction = #{direction,jdbcType=VARCHAR},
+      effect = #{effect,jdbcType=VARCHAR},
+      normalized_verb = #{normalizedVerb,jdbcType=VARCHAR},
+      protein1 = #{protein1,jdbcType=VARCHAR},
+      protein2 = #{protein2,jdbcType=VARCHAR},
+      pubmed_id = #{pubmedId,jdbcType=VARCHAR},
+      score = #{score,jdbcType=DOUBLE},
+      sentence_id = #{sentenceId,jdbcType=VARCHAR},
+      verb = #{verb,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -42,7 +42,7 @@
 			<div style="margin-top: 40px; margin-bottom: 40px;">
 				<hr />
 			</div>
-
+				<!-- <a href="search/we/0/*/*/*/*/0/10" target="_blank">测试</a> -->
 			<div class="row">
 
 				<c:forEach items="${links}" var="link" varStatus="status">

@@ -35,13 +35,13 @@
 			enableUpdateByExample="false" selectByExampleQueryId="false">
 			<generatedKey column="id" sqlStatement="Mysql" type="post" identity="true"/>
 		</table> -->
-		<table tableName="pubmed"  enableCountByExample="false"
+		<table tableName="update_record"  enableCountByExample="false"
 			enableDeleteByExample="false" enableSelectByExample="false"
 			enableUpdateByExample="false" selectByExampleQueryId="false">
 			<generatedKey column="id" sqlStatement="Mysql" type="post" identity="true"/>
-			<columnOverride column="abstract_" property="abstractContents" javaType="java.lang.String" jdbcType="VARCHAR" />
+			<!-- <columnOverride column="abstract_" property="abstractContents" javaType="java.lang.String" jdbcType="VARCHAR" />
 			<columnOverride column="journal" property="journal" javaType="java.lang.String" jdbcType="VARCHAR" />
-			<columnOverride column="title" property="title" javaType="java.lang.String" jdbcType="VARCHAR" /> 
+			<columnOverride column="title" property="title" javaType="java.lang.String" jdbcType="VARCHAR" />  -->
 		</table>
     </context>
 </generatorConfiguration>

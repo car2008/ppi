@@ -257,9 +257,15 @@ div.label {
 		                                         -->
 										<td style="text-align: center; padding: 0 2px;">
 											<input type="hidden" name="t" value="${params.t}" /> 
-											<input name="keyWords"	style="border: 1px solid #aaaaaa; width: 100%; margin-right: 3px;" placeholder="Enter keywords to search" />
-											<input type="hidden" name="page" value="1" /> 
-											<input type="hidden" name="rows" value="10" /> 
+											<input name="key"	style="border: 1px solid #aaaaaa; width: 100%; margin-right: 3px;" placeholder="Enter keywords to search" />
+											<input type="hidden" name="time" value="0" /> 
+											<input type="hidden" name="taxonomy" value="" />
+											<input type="hidden" name="startDate" value="" /> 
+											<input type="hidden" name="endDate" value="" /> 
+											<input type="hidden" name="wandCode" value="" /> 
+											<input type="hidden" name="start" value="0" /> 
+											<input type="hidden" name="rows" value="10" />  
+											<input type="hidden" name="wandCode" value="" />  
 										</td>
 										<td style="width: 80px; padding: 0 2px;">
 											<button type="submit" class="btn btn-xs btn-primary" onclick="initSearch(); return true;">Search</button>

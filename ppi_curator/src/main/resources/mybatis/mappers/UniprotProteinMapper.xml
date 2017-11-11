@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ppi.search.mapper.UniprotProteinMapper">
+  <resultMap id="BaseResultMap" type="com.ppi.search.pojo.UniprotProtein">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="version" jdbcType="BIGINT" property="version" />
+    <result column="protein" jdbcType="VARCHAR" property="protein" />
+    <result column="uniprot" jdbcType="VARCHAR" property="uniprot" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, version, protein, uniprot
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from uniprot_protein
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from uniprot_protein
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ppi.search.pojo.UniprotProtein">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into uniprot_protein (version, protein, uniprot
+      )
+    values (#{version,jdbcType=BIGINT}, #{protein,jdbcType=VARCHAR}, #{uniprot,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ppi.search.pojo.UniprotProtein">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into uniprot_protein
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="version != null">
+        version,
+      </if>
+      <if test="protein != null">
+        protein,
+      </if>
+      <if test="uniprot != null">
+        uniprot,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="version != null">
+        #{version,jdbcType=BIGINT},
+      </if>
+      <if test="protein != null">
+        #{protein,jdbcType=VARCHAR},
+      </if>
+      <if test="uniprot != null">
+        #{uniprot,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ppi.search.pojo.UniprotProtein">
+    update uniprot_protein
+    <set>
+      <if test="version != null">
+        version = #{version,jdbcType=BIGINT},
+      </if>
+      <if test="protein != null">
+        protein = #{protein,jdbcType=VARCHAR},
+      </if>
+      <if test="uniprot != null">
+        uniprot = #{uniprot,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ppi.search.pojo.UniprotProtein">
+    update uniprot_protein
+    set version = #{version,jdbcType=BIGINT},
+      protein = #{protein,jdbcType=VARCHAR},
+      uniprot = #{uniprot,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

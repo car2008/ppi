@@ -13,7 +13,7 @@
 
 				<div class="col-sm-6">
 					<h3>
-						搜索结果:
+						搜索结果:${list.size()}
 					</h3>
 					<c:forEach items="${list}" var="value"
 						varStatus="status">

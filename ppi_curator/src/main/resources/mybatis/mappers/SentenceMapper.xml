@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ppi.search.mapper.SentenceMapper">
+  <resultMap id="BaseResultMap" type="com.ppi.search.pojo.Sentence">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="version" jdbcType="BIGINT" property="version" />
+    <result column="pubmed_id" jdbcType="VARCHAR" property="pubmedId" />
+    <result column="score" jdbcType="DOUBLE" property="score" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.ppi.search.pojo.Sentence">
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, version, pubmed_id, score
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sentence
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from sentence
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.ppi.search.pojo.Sentence">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sentence (version, pubmed_id, score, 
+      content)
+    values (#{version,jdbcType=BIGINT}, #{pubmedId,jdbcType=VARCHAR}, #{score,jdbcType=DOUBLE}, 
+      #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ppi.search.pojo.Sentence">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sentence
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="version != null">
+        version,
+      </if>
+      <if test="pubmedId != null">
+        pubmed_id,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="version != null">
+        #{version,jdbcType=BIGINT},
+      </if>
+      <if test="pubmedId != null">
+        #{pubmedId,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ppi.search.pojo.Sentence">
+    update sentence
+    <set>
+      <if test="version != null">
+        version = #{version,jdbcType=BIGINT},
+      </if>
+      <if test="pubmedId != null">
+        pubmed_id = #{pubmedId,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=DOUBLE},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.ppi.search.pojo.Sentence">
+    update sentence
+    set version = #{version,jdbcType=BIGINT},
+      pubmed_id = #{pubmedId,jdbcType=VARCHAR},
+      score = #{score,jdbcType=DOUBLE},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ppi.search.pojo.Sentence">
+    update sentence
+    set version = #{version,jdbcType=BIGINT},
+      pubmed_id = #{pubmedId,jdbcType=VARCHAR},
+      score = #{score,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

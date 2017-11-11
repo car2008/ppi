@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ppi.search.mapper.UpdateRecordMapper">
+  <resultMap id="BaseResultMap" type="com.ppi.search.pojo.UpdateRecord">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="version" jdbcType="BIGINT" property="version" />
+    <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated" />
+    <result column="last_updated" jdbcType="TIMESTAMP" property="lastUpdated" />
+    <result column="param_end_date" jdbcType="VARCHAR" property="paramEndDate" />
+    <result column="param_start_date" jdbcType="VARCHAR" property="paramStartDate" />
+    <result column="progress" jdbcType="INTEGER" property="progress" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="update_finish" jdbcType="TIMESTAMP" property="updateFinish" />
+    <result column="update_start" jdbcType="TIMESTAMP" property="updateStart" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, version, date_created, last_updated, param_end_date, param_start_date, progress, 
+    status, update_finish, update_start
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from update_record
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from update_record
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ppi.search.pojo.UpdateRecord">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into update_record (version, date_created, last_updated, 
+      param_end_date, param_start_date, progress, 
+      status, update_finish, update_start
+      )
+    values (#{version,jdbcType=BIGINT}, #{dateCreated,jdbcType=TIMESTAMP}, #{lastUpdated,jdbcType=TIMESTAMP}, 
+      #{paramEndDate,jdbcType=VARCHAR}, #{paramStartDate,jdbcType=VARCHAR}, #{progress,jdbcType=INTEGER}, 
+      #{status,jdbcType=VARCHAR}, #{updateFinish,jdbcType=TIMESTAMP}, #{updateStart,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ppi.search.pojo.UpdateRecord">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into update_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="version != null">
+        version,
+      </if>
+      <if test="dateCreated != null">
+        date_created,
+      </if>
+      <if test="lastUpdated != null">
+        last_updated,
+      </if>
+      <if test="paramEndDate != null">
+        param_end_date,
+      </if>
+      <if test="paramStartDate != null">
+        param_start_date,
+      </if>
+      <if test="progress != null">
+        progress,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="updateFinish != null">
+        update_finish,
+      </if>
+      <if test="updateStart != null">
+        update_start,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="version != null">
+        #{version,jdbcType=BIGINT},
+      </if>
+      <if test="dateCreated != null">
+        #{dateCreated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdated != null">
+        #{lastUpdated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paramEndDate != null">
+        #{paramEndDate,jdbcType=VARCHAR},
+      </if>
+      <if test="paramStartDate != null">
+        #{paramStartDate,jdbcType=VARCHAR},
+      </if>
+      <if test="progress != null">
+        #{progress,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="updateFinish != null">
+        #{updateFinish,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateStart != null">
+        #{updateStart,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ppi.search.pojo.UpdateRecord">
+    update update_record
+    <set>
+      <if test="version != null">
+        version = #{version,jdbcType=BIGINT},
+      </if>
+      <if test="dateCreated != null">
+        date_created = #{dateCreated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdated != null">
+        last_updated = #{lastUpdated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paramEndDate != null">
+        param_end_date = #{paramEndDate,jdbcType=VARCHAR},
+      </if>
+      <if test="paramStartDate != null">
+        param_start_date = #{paramStartDate,jdbcType=VARCHAR},
+      </if>
+      <if test="progress != null">
+        progress = #{progress,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="updateFinish != null">
+        update_finish = #{updateFinish,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateStart != null">
+        update_start = #{updateStart,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ppi.search.pojo.UpdateRecord">
+    update update_record
+    set version = #{version,jdbcType=BIGINT},
+      date_created = #{dateCreated,jdbcType=TIMESTAMP},
+      last_updated = #{lastUpdated,jdbcType=TIMESTAMP},
+      param_end_date = #{paramEndDate,jdbcType=VARCHAR},
+      param_start_date = #{paramStartDate,jdbcType=VARCHAR},
+      progress = #{progress,jdbcType=INTEGER},
+      status = #{status,jdbcType=VARCHAR},
+      update_finish = #{updateFinish,jdbcType=TIMESTAMP},
+      update_start = #{updateStart,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
