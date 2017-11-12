@@ -40,7 +40,7 @@
 										<i class="fa fa-fw"></i>
 										All (${numFound})
 									</a> --%>
-									<a href="pubmed/${params}/*/0">
+									<a href="${pageContext.request.contextPath}/pubmed/${q}/*/*/*/0/${max}">
 										<i class="fa fa-fw"></i>
 										All (${numFound})
 									</a>
@@ -51,17 +51,18 @@
 									<c:choose>
 										<c:when test="${taxonomy == popularTaxonomy.id}">
 											<i class="fa fa-fw fa-check"></i>
-											${popularTaxonomy.scientificName}
+											${popularTaxonomy.scientificName}(${taxonomyStat[popularTaxonomy.id]})
 										</c:when>
 										<c:otherwise>
-											<%-- <a href="${createLink(action: 'pubmed', params: params + ['taxonomy': popularTaxonomy.id, 'offset': 0])}">
+											<a href="${pageContext.request.contextPath}/pubmed/${q}/${popularTaxonomy.id}/*/*/0/${max}">
 												<i class="fa fa-fw"></i>
-												${popularTaxonomy.scientificName} (${taxonomyStat[popularTaxonomy.id] ? taxonomyStat[popularTaxonomy.id]['count'] : 0})
+												<c:if test="${taxonomyStat[popularTaxonomy.id]>0}">
+													${popularTaxonomy.scientificName} (${taxonomyStat[popularTaxonomy.id]})
+												</c:if>
+												<c:if test="${taxonomyStat[popularTaxonomy.id]==null}">
+													${popularTaxonomy.scientificName} (0)
+												</c:if>
 											</a>
-											<a href="pubmed/${params}/${popularTaxonomy.id }/0">
-												<i class="fa fa-fw"></i>
-												${popularTaxonomy.scientificName} 
-											</a> --%>
 										</c:otherwise>
 									</c:choose>
 									<br />
@@ -89,26 +90,33 @@
 										<i class="fa fa-fw"></i>
 										All (${numFound})
 									</a> --%>
-									<a href="pubmed/${params}/*/*/0">
+									<a href="${pageContext.request.contextPath}/pubmed/${q}/*/*/*/0/${max}">
 										<i class="fa fa-fw"></i>
 										All (${numFound})
 									</a>
 								</c:otherwise>
 								</c:choose>
 								<br />
-								<%-- <c:forEach items="${(thisYear .. thisYear - 4)}" var="year">
-									<c:when test="${params.start == '${year}-01-01' && params.end == '${year}-12-31'}">
-										<i class="fa fa-fw fa-check"></i>
-										${year} (${yearStat["${year}"] ? yearStat["${year}"]['count'] : 0})
-									</c:when>
-									<c:otherwise>
-										<a href="${createLink(action: 'pubmed', params: params + ['start': "${year}-01-01", 'end': "${year}-12-31", 'offset': 0])}">
-											<i class="fa fa-fw"></i>
-											${year} (${yearStat["${year}"] ? yearStat["${year}"]['count'] : 0})
-										</a>
-									</c:otherwise>
+							    <c:forEach items="${yearArray}" var="year">
+									<c:choose>
+										<c:when test="${start == '${year}-01-01' && end == '${year}-12-31'}">
+											<i class="fa fa-fw fa-check"></i>
+											${year} (${yearStat["${year}"]})
+										</c:when>
+										<c:otherwise>
+											<a href="${pageContext.request.contextPath}/pubmed/${q}/*/'${year}-01-01'/'${year}-12-31'/0/${max}">
+												<i class="fa fa-fw"></i>
+												<c:if test="${yearStat[year]>0}">
+													${year} (${yearStat[year]})
+												</c:if>
+												<c:if test="${yearStat[year]==null}">
+													${year} (0)
+												</c:if>
+											</a>
+										</c:otherwise>
+									</c:choose>
 									<br />
-								</c:forEach> --%>
+								</c:forEach>
 								
 								<div style="margin-left: 20px; margin-top: 3px;">
 									<h5>

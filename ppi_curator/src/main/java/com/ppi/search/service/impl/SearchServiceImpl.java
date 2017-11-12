@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.beans.DocumentObjectBinder;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
@@ -93,55 +95,55 @@ public class SearchServiceImpl implements SearchService{
    }
    
    @Override
-   public Map<String,Object> querySolr(String key,int time,String taxonomy,String startDate,String endDate,String wandCode,int start,int rows){  
+   public Map<String,Object> querySolr(String key,String taxonomy,String startDate,String endDate,int start,int rows){  
        SolrQuery query = new SolrQuery();    
        SolrDocumentList list = new SolrDocumentList();  
-       Map<String,Object> map = new HashMap<String, Object>();  
+       Map<String,Object> map = new HashMap<String, Object>(); 
+       Map<String,Long> taxonomyStat = new HashMap<String, Long>();  
+       Map<String,Long> yearStat = new HashMap<String, Long>();  
        Date now = new Date();  
        String dtStart = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(now);    
        System.out.println("开始时间：" + dtStart + "\n");   
        String params="";  
-         
-       /*if(StringUtils.isNotEmpty(taxonomy)){  
-           query.setFilterQueries("taxonomy:"+taxonomy+"*");  
-       } */ 
        
-       if(time>0){  
-           //query.setFacet(true);// 设置facet=on   
-           //query.addFacetField(new String[] {"timeStamp"});// 设置需要facet的字段    
-           SimpleDateFormat time0 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");    
-           SimpleDateFormat time1 = new SimpleDateFormat("yyyy-MM-dd");    
-           SimpleDateFormat time2 = new SimpleDateFormat("HH:mm:ss");    
-           // date.getYear()+"-"+date.getMonth()+"-"+date.getDay()+"T"+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();             
-           Calendar c = Calendar.getInstance();    
-           try {  
-               c.setTime(time0.parse(time1.format(c.getTime()) + " 23:59:59"));  
-               Date date = c.getTime();    
-               String dateNow = time1.format(date) + "T" + time2.format(date) + "Z";    
-               c.setTime(time0.parse(time1.format(c.getTime()) + " 23:59:59"));    
-               date = c.getTime();    
-               // 当天    
-               if(time==1)  
-                   c.add(Calendar.DATE, -1);               
-               if(time==3)  
-                   c.add(Calendar.DATE, -2);  
-               if(time==7)  
-                   c.add(Calendar.DATE, -7);  
-               if(time==20)  
-                   c.add(Calendar.DATE, -51);  
-               date = c.getTime();   
- 
-               params=params+"(date:["+time1.format(date) + "T"    
-                            + time2.format(date) + "Z" + " TO " + dateNow + "])";  
-               logger.info("开始时间"+time1.format(date) + "T"    
-                           + time2.format(date) + "Z" + " TO " + dateNow);  
-           } catch (ParseException e) {  
-               // TODO Auto-generated catch block  
-               e.printStackTrace();  
-           }    
+       if(StringUtils.isNotEmpty(key)){  
+           //params=params+"title:"+key+" OR abstract:"+key+"";  
+    	   params=params+key;  
        }  
+          
+       if(!StringUtils.isNotEmpty(params)){  
+           params="*:*";   
+       }
+       //分片信息  
+       query.setFacet(true)  
+           .setFacetMinCount(1)  
+           .setFacetLimit(1000)//段  
+           .addFacetField("taxonomy","year");//分片字段
        
-       /*if(StringUtils.isNotEmpty(startDate)||StringUtils.isNotEmpty(endDate)){ 
+       query.setQuery(params);  
+       query.setStart(start);  
+       query.setRows(rows);    
+       //query.addSort("timeStamp", ORDER.desc);
+       Integer recordsTotal =null;
+       try{
+    	   QueryResponse response1 = httpSolrServer.query(query);     
+           recordsTotal=(int) response1.getResults().getNumFound(); 
+           Iterator taxits=response1.getFacetField("taxonomy").getValues().iterator();
+           while(taxits.hasNext()){
+        	   Count ct=(Count)taxits.next();
+        	   taxonomyStat.put(ct.getName(), ct.getCount());
+           }
+           Iterator yearits=response1.getFacetField("year").getValues().iterator();
+           while(yearits.hasNext()){
+        	   Count ct=(Count)yearits.next();
+        	   yearStat.put(ct.getName(), ct.getCount());
+           }
+           System.out.println(yearStat);
+       }catch(Exception e){
+    	   e.printStackTrace();
+       }
+       
+       if(StringUtils.isNotEmpty(startDate)||StringUtils.isNotEmpty(endDate)){ 
    			String start1 = "*";
             if (!"*".equals(startDate)) {
                 start1 = startDate+"T00:00:00Z";
@@ -152,21 +154,15 @@ public class SearchServiceImpl implements SearchService{
                 end1 = endDate+"T23:59:59Z";
             }
     	   query.setFilterQueries("date:"+start1+" To "+end1);
-       }*/
+       }
        
-       if(StringUtils.isNotEmpty(key)){  
-           //params=params+"title:"+key+" OR abstract:"+key+"";  
-    	   params=params+key;  
-       }  
-          
-       if(!StringUtils.isNotEmpty(params)){  
-           params="*:*";   
-       }  
-       query.setQuery(params);  
-       query.setStart(start);  
-       query.setRows(rows);    
-       //query.addSort("timeStamp", ORDER.desc);  
-         
+       if(StringUtils.isNotEmpty(taxonomy)){ 
+  		   String taxonomy1 = "*";
+           if (!"*".equals(taxonomy)) {
+               taxonomy1 = taxonomy+"*";
+           }
+   	   query.setFilterQueries("taxonomy:"+taxonomy1);
+      }
        //设置高亮  
        query.setHighlight(true); // 开启高亮组件  
        query.set("hl.highlightMultiTerm","true");//启用多字段高亮  
@@ -178,19 +174,14 @@ public class SearchServiceImpl implements SearchService{
        query.setHighlightFragsize(1000);//每个分片的最大长度，默认为100  
        query.setQuery(params);  
        
-       //分片信息  
-       query.setFacet(true)  
-           .setFacetMinCount(1)  
-           .setFacetLimit(1000)//段  
-           .addFacetField("taxonomy","year");//分片字段
        logger.info("-----------query="+query); 
        System.out.println("query="+query);
        
        try {  
            QueryResponse response = httpSolrServer.query(query);     
            list = response.getResults();  
-           System.out.println("++++++++++++++" +list.toString());  
-           Integer recordsTotal=(int) list.getNumFound();  
+           System.out.println("++++++++++++++" +list.toString()); 
+           //Integer recordsTotal=(int) list.getNumFound();  
            logger.info("counts:"+recordsTotal);  
            //page.setCounts(counts);  
            //获取所有高亮的字段  
@@ -223,9 +214,11 @@ public class SearchServiceImpl implements SearchService{
            }
            map.put("recordsTotal", recordsTotal);  
            map.put("records", results);  
+           map.put("taxonomyStat", taxonomyStat);
+           map.put("yearStat",yearStat);
            System.out.println(recordsTotal);
            System.out.println("map.size----"+results.size());
-           System.out.println("nlist.size----"+nlist.size());
+           System.out.println("taxonomyStat"+taxonomyStat);
            //httpSolrServer.shutdown();     
        } catch (Exception e) {  
            e.printStackTrace();  
