@@ -125,7 +125,8 @@ public class SearchServiceImpl implements SearchService{
             if (!"*".equals(endDate)) {
                 end1 = endDate+"T23:59:59Z";
             }
-    	   query.addFilterQuery("date:"+start1+" To "+end1+"");
+           System.out.println(start1+"++++++++++++++++++++++="+end1);
+    	   query.addFilterQuery("date:["+start1+" TO "+end1+"]");
        }
        
        if(!"*".equals(taxonomy)){ 

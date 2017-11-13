@@ -104,7 +104,7 @@
 											${year} (${yearStat["${year}"]})
 										</c:when>
 										<c:otherwise>
-											<a href="${pageContext.request.contextPath}/pubmed/${q}/*/'${year}-01-01'/'${year}-12-31'/0/${max}">
+											<a href="${pageContext.request.contextPath}/pubmed/${q}/*/${year}-01-01/${year}-12-31/0/${max}">
 												<i class="fa fa-fw"></i>
 												<c:if test="${yearStat[year]>0}">
 													${year} (${yearStat[year]})
@@ -363,13 +363,11 @@
 												${record.value['title']}
 											</a>
 										</div>
-										<%-- <div>
-											<strong>${record.value['journal']}</strong>
-											|
-											${record.value['date'] ? formatDate(date: record.value['date'], format: 'yyyy-MM-dd') : 'N/A'}
-											|
-											${record.value['taxonomy'] ? record.value['taxonomy'].scientificName : 'N/A'}
-										</div> --%>
+										<div>
+											<strong>${record.value['journal']}</strong><b>|</b>
+											${record.value['date']==null?'N/A':''} <fmt:formatDate value="${record.value['date']}" type="date" dateStyle="default"/>  <b>|</b>
+											${record.value['taxonomy']==null?'N/A':record.value['taxonomy']}  <b>|</b>
+										</div> 
 										<div>
 											PMID: ${record.value['pmid']}
 										</div>
@@ -390,7 +388,7 @@
 							</h4>
 							<div class="btn-group" style="width: 100%; margin-bottom: 10px;">
 								<button type="button" class="btn btn-primary btn-block dropdown-toggle" data-toggle="dropdown">
-									<%-- <span id="selection-count">${pubmedSelection?.size()}</span> Selected <span class="caret"></span> --%>
+									<span id="selection-count">0</span> Selected <span class="caret"></span>
 								</button>
 								<ul class="dropdown-menu" role="menu" style="width: 100%;">
 									<li>
@@ -405,13 +403,13 @@
 								</ul>
 							</div>
 							
-							<%-- <a id="btn-curate" class="btn btn-primary btn-block" style="margin-bottom: 10px;" href="${createLink(action: 'curate', params: params + ['ps': 'selected', 'offset': 0])}">
+							<a id="btn-curate" class="btn btn-primary btn-block" style="margin-bottom: 10px;" href="#">
 								Curate Selected
 							</a>
 							
-							<a id="btn-export" class="btn btn-primary btn-block" style="margin-bottom: 10px;" href="${createLink(action: 'curate', params: params + ['export': true, 'ps': 'selected', 'offset': 0])}">
+							<a id="btn-export" class="btn btn-primary btn-block" style="margin-bottom: 10px;" href="#">
 								Export Selected
-							</a> --%>
+							</a>
 							
 							<div class="btn-group hidden" style="width: 100%; margin-bottom: 10px;">
 								<button type="button" class="btn btn-primary btn-block dropdown-toggle" data-toggle="dropdown">
