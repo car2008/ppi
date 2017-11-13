@@ -95,15 +95,13 @@ public class SearchServiceImpl implements SearchService{
    }
    
    @Override
-   public Map<String,Object> querySolr(String key,String taxonomy,String startDate,String endDate,int start,int rows){  
+   public Map<String,Object> querySolr(String key,String taxonomy,String startDate,String endDate,int start,int rows){
+	   Map<String,Object> countMap = facetQueryCount(key);
        SolrQuery query = new SolrQuery();    
        SolrDocumentList list = new SolrDocumentList();  
        Map<String,Object> map = new HashMap<String, Object>(); 
-       Map<String,Long> taxonomyStat = new HashMap<String, Long>();  
-       Map<String,Long> yearStat = new HashMap<String, Long>();  
-       Date now = new Date();  
-       String dtStart = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(now);    
-       System.out.println("开始时间：" + dtStart + "\n");   
+       Map<String,Long> taxonomyStat = (Map<String, Long>) countMap.get("taxonomyStat");  
+       Map<String,Long> yearStat = (Map<String, Long>) countMap.get("yearStat");  
        String params="";  
        
        if(StringUtils.isNotEmpty(key)){  
@@ -114,36 +112,10 @@ public class SearchServiceImpl implements SearchService{
        if(!StringUtils.isNotEmpty(params)){  
            params="*:*";   
        }
-       //分片信息  
-       query.setFacet(true)  
-           .setFacetMinCount(1)  
-           .setFacetLimit(1000)//段  
-           .addFacetField("taxonomy","year");//分片字段
        
        query.setQuery(params);  
-       query.setStart(start);  
-       query.setRows(rows);    
-       //query.addSort("timeStamp", ORDER.desc);
-       Integer recordsTotal =null;
-       try{
-    	   QueryResponse response1 = httpSolrServer.query(query);     
-           recordsTotal=(int) response1.getResults().getNumFound(); 
-           Iterator taxits=response1.getFacetField("taxonomy").getValues().iterator();
-           while(taxits.hasNext()){
-        	   Count ct=(Count)taxits.next();
-        	   taxonomyStat.put(ct.getName(), ct.getCount());
-           }
-           Iterator yearits=response1.getFacetField("year").getValues().iterator();
-           while(yearits.hasNext()){
-        	   Count ct=(Count)yearits.next();
-        	   yearStat.put(ct.getName(), ct.getCount());
-           }
-           System.out.println(yearStat);
-       }catch(Exception e){
-    	   e.printStackTrace();
-       }
        
-       if(StringUtils.isNotEmpty(startDate)||StringUtils.isNotEmpty(endDate)){ 
+       if(!"*".equals(startDate)||!"*".equals(endDate)){ 
    			String start1 = "*";
             if (!"*".equals(startDate)) {
                 start1 = startDate+"T00:00:00Z";
@@ -153,16 +125,16 @@ public class SearchServiceImpl implements SearchService{
             if (!"*".equals(endDate)) {
                 end1 = endDate+"T23:59:59Z";
             }
-    	   query.setFilterQueries("date:"+start1+" To "+end1);
+    	   query.addFilterQuery("date:"+start1+" To "+end1+"");
        }
        
-       if(StringUtils.isNotEmpty(taxonomy)){ 
-  		   String taxonomy1 = "*";
-           if (!"*".equals(taxonomy)) {
-               taxonomy1 = taxonomy+"*";
-           }
-   	   query.setFilterQueries("taxonomy:"+taxonomy1);
-      }
+       if(!"*".equals(taxonomy)){ 
+   	       query.addFilterQuery("taxonomy:"+taxonomy);
+       }
+       
+       query.setStart(start);  
+       query.setRows(rows);  
+       
        //设置高亮  
        query.setHighlight(true); // 开启高亮组件  
        query.set("hl.highlightMultiTerm","true");//启用多字段高亮  
@@ -172,7 +144,12 @@ public class SearchServiceImpl implements SearchService{
        query.setHighlightSimplePost("</font>");//后缀  
        query.setHighlightSnippets(2);//结果分片数，默认为1  
        query.setHighlightFragsize(1000);//每个分片的最大长度，默认为100  
-       query.setQuery(params);  
+       
+       //分片信息  
+       query.setFacet(true)  
+           .setFacetMinCount(1)  
+           .setFacetLimit(1000)//段  
+           .addFacetField("taxonomy","year");//分片字段
        
        logger.info("-----------query="+query); 
        System.out.println("query="+query);
@@ -180,10 +157,8 @@ public class SearchServiceImpl implements SearchService{
        try {  
            QueryResponse response = httpSolrServer.query(query);     
            list = response.getResults();  
-           System.out.println("++++++++++++++" +list.toString()); 
-           //Integer recordsTotal=(int) list.getNumFound();  
-           logger.info("counts:"+recordsTotal);  
-           //page.setCounts(counts);  
+           System.out.println("============" +list.toString()); 
+           logger.info("counts:"+countMap.get("recordsTotal"));  
            //获取所有高亮的字段  
            Map<String,Map<String,List<String>>> highlightMap=response.getHighlighting();  
            for (SolrDocument sd : list) {  
@@ -212,18 +187,68 @@ public class SearchServiceImpl implements SearchService{
         	   reMap.put("pmid", result.getPmid());
         	   results.put(result.getPmid(), reMap);
            }
-           map.put("recordsTotal", recordsTotal);  
+           map.put("recordsTotal", countMap.get("recordsTotal"));  
            map.put("records", results);  
            map.put("taxonomyStat", taxonomyStat);
            map.put("yearStat",yearStat);
-           System.out.println(recordsTotal);
+           System.out.println(countMap.get("recordsTotal"));
            System.out.println("map.size----"+results.size());
            System.out.println("taxonomyStat"+taxonomyStat);
+           System.out.println("yearStat"+yearStat);
            //httpSolrServer.shutdown();     
        } catch (Exception e) {  
            e.printStackTrace();  
        }  
        return map;  
    } 
+   
+   /**
+    * 分片查询， 可以统计关键字及出现的次数、或是做自动补全提示
+    * @author 
+    * @createDate
+    */
+   
+   public Map<String,Object> facetQueryCount(String key) {
+	   Map<String,Object> facetStat = new HashMap<String, Object>();
+	   Map<String,Long> taxonomyStat = new HashMap<String, Long>();  
+       Map<String,Long> yearStat = new HashMap<String, Long>(); 
+       SolrQuery params = new SolrQuery();
+       params.setQuery(key);
+       //排序
+       //params.addSortField("id", ORDER.asc);
+       params.setStart(0);
+       params.setRows(200);
+       //Facet为solr中的层次分类查询
+       //分片信息
+       params.setFacet(true)
+           .setFacetMinCount(1)
+           .setFacetLimit(1000)//段
+           //.setFacetPrefix("cor")//查询taxonomy、year中关键字前缀是cor的
+           .addFacetField("taxonomy")
+           .addFacetField("year");//分片字段
+    
+       Integer recordsTotal =null;
+       try{
+    	   QueryResponse response1 = httpSolrServer.query(params);     
+           recordsTotal=(int) response1.getResults().getNumFound(); 
+           Iterator taxits=response1.getFacetField("taxonomy").getValues().iterator();
+           while(taxits.hasNext()){
+        	   Count ct=(Count)taxits.next();
+        	   taxonomyStat.put(ct.getName(), ct.getCount());
+           }
+           Iterator yearits=response1.getFacetField("year").getValues().iterator();
+           while(yearits.hasNext()){
+        	   Count ct=(Count)yearits.next();
+        	   yearStat.put(ct.getName(), ct.getCount());
+           }
+           System.out.println(yearStat);
+       }catch(Exception e){
+    	   e.printStackTrace();
+       }
+       facetStat.put("taxonomyStat", taxonomyStat);
+       facetStat.put("yearStat", yearStat);
+       facetStat.put("recordsTotal", recordsTotal);
+       return facetStat;
+   }
 
 }
