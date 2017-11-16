@@ -1,5 +1,7 @@
 package com.ppi.search.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -15,6 +17,10 @@ public class TaxonomyServiceImpl implements TaxonomyService {
 	@Override
 	public Taxonomy selectByPrimaryKey(String id) {
 		return taxonomyMapper.selectByPrimaryKey(id);
+	}
+	@Override
+	public List<Taxonomy> findAll() {
+		return taxonomyMapper.findAll();
 	}
 	
 }

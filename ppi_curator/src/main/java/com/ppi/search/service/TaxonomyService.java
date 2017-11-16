@@ -7,4 +7,5 @@ import com.ppi.search.pojo.Taxonomy;
 
 public interface TaxonomyService {
 	Taxonomy selectByPrimaryKey(String id);
+	List<Taxonomy> findAll();
 }

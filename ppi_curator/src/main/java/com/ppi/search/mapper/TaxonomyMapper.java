@@ -1,5 +1,7 @@
 package com.ppi.search.mapper;
 
+import java.util.List;
+
 import com.ppi.search.pojo.Taxonomy;
 
 public interface TaxonomyMapper {
@@ -14,4 +16,6 @@ public interface TaxonomyMapper {
     int updateByPrimaryKeySelective(Taxonomy record);
 
     int updateByPrimaryKey(Taxonomy record);
+    
+    List<Taxonomy> findAll();
 }

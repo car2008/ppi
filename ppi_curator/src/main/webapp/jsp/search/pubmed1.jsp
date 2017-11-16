@@ -23,7 +23,7 @@
 			<c:when test="${success}">
 				<div class="row">
 					<div class="col-sm-2">
-						<form method="get">
+						<form method="post">
 							<input type="hidden" name="offset" value="0" />
 							
 							<div class="sidebar">
@@ -71,9 +71,9 @@
 								<div style="margin-left: 20px; margin-top: 3px;">
 									<select id="taxonomy" name="taxonomy" style="width: 100%; margin-bottom: 20px;" onchange="taxonomyChange()">
 										<option value="">Other species</option>
-										<%-- <c:forEach items="${taxonomyStat}" var="taxonomyStatRecord">
-											<option value="${taxonomyStatRecord.key}" ${params.taxonomy == taxonomyStatRecord.key ? 'selected' : ''}>${taxonomyStatRecord.value['taxonomy']?.scientificName} (${taxonomyStatRecord.value['count']})</option>
-										</c:forEach> --%>
+										<c:forEach items="${otherTaxonomies}" var="taxonomyStatRecord">
+											<option value="${taxonomyStatRecord.key}" ${taxonomy == taxonomyStatRecord.key ? 'selected' : ''}> (${taxonomyStatRecord.value})</option>
+										</c:forEach>
 									</select>
 								</div>
 								
@@ -124,13 +124,13 @@
 									</h5>
 									<div style="margin-bottom: 10px;">
 										<div class="input-group" style="margin-bottom: 3px;">
-											<input id="start" name="start" type="text" class="form-control datepicker" data-start-view="2" autocomplete="off" value="${params.start == '*' ? '' : params.start }" placeholder="From" >
+											<input id="start" name="start" type="text" class="form-control datepicker" data-start-view="2" autocomplete="off" value="${start == '*' ? '' : start }" placeholder="From" >
 											<div class="input-group-addon">
 												<a href="javascript:;" style="color: #bbb;" onclick="javascript:$('#start').val('')"><i class="fa fa-fw fa-times"></i></a>
 											</div>
 										</div>
 										<div class="input-group">
-											<input id="end" name="end" type="text" class="form-control datepicker" data-start-view="2" autocomplete="off" value="${params.end == '*' ? '' : params.end}" placeholder="To">
+											<input id="end" name="end" type="text" class="form-control datepicker" data-start-view="2" autocomplete="off" value="${end == '*' ? '' : end}" placeholder="To">
 											<div class="input-group-addon">
 												<a href="javascript:;" style="color: #bbb;" onclick="javascript:$('#end').val('')"><i class="fa fa-fw fa-times"></i></a>
 											</div>

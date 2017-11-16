@@ -1,6 +1,7 @@
 package com.ppi.search.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,24 +36,33 @@ public class SearchController {
      */
     @RequestMapping(value = "search", method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView search(@RequestParam("key") String key,@RequestParam("taxonomy") String taxonomy, @RequestParam("startDate") String startDate,@RequestParam("endDate") String endDate,@RequestParam("start") Integer start, @RequestParam("rows") Integer rows) throws Exception {
-    	Map<String,Object> resultMap = this.searchService.querySolr(key,taxonomy,startDate,endDate,start,rows);
+    public ModelAndView search(@RequestParam("q") String q,@RequestParam("taxonomy") String taxonomy, @RequestParam("start") String start,@RequestParam("end") String end,@RequestParam("offset") Integer offset, @RequestParam("max") Integer max){
+    	Map<String,Object> resultMap = this.searchService.querySolr(q,taxonomy,start,end,offset,max);
+    	Map<String,Object> otherTaxonomies = new HashMap<String,Object>();
+    	List<Taxonomy> allTaxonomies = taxonomyService.findAll();
     	List popularTaxonomies = new ArrayList<Taxonomy>();
     	popularTaxonomies.add(taxonomyService.selectByPrimaryKey("9606"));
     	popularTaxonomies.add(taxonomyService.selectByPrimaryKey("10090"));
     	popularTaxonomies.add(taxonomyService.selectByPrimaryKey("10116"));
     	popularTaxonomies.add(taxonomyService.selectByPrimaryKey("9913"));
     	popularTaxonomies.add(taxonomyService.selectByPrimaryKey("7955"));
+    	allTaxonomies.removeAll(popularTaxonomies);
+    	Map taxonomyStat = (Map) resultMap.get("taxonomyStat");
+    	for(Taxonomy tax:allTaxonomies){
+    		if(taxonomyStat.get(tax.getId())!=null){
+    			otherTaxonomies.put(tax.getId(), new HashMap());
+    		}
+    	}
     	Long[] array = new Long[]{10l,20l,50l,100l};
     	String[] yearArray = new String[]{"2017","2016","2015","2014","2013"};
     	System.out.println("resultMap:"+resultMap);
     	ModelAndView mv = new ModelAndView();
-    	mv.addObject("q",key);
+    	mv.addObject("q",q);
     	mv.addObject("taxonomy",taxonomy);
-    	mv.addObject("start",startDate);
-    	mv.addObject("end",endDate);
-    	mv.addObject("offset",start);
-    	mv.addObject("max",rows);
+    	mv.addObject("start",start);
+    	mv.addObject("end",end);
+    	mv.addObject("offset",offset);
+    	mv.addObject("max",max);
     	mv.addObject("batch",false);
     	mv.addObject("success",true);
     	mv.addObject("ab",true);
@@ -66,43 +76,14 @@ public class SearchController {
     	mv.addObject("popularTaxonomies", popularTaxonomies);
     	mv.addObject("yearArray", yearArray);
     	mv.addObject("array", array);
+    	mv.addObject("otherTaxonomies",otherTaxonomies);
     	mv.setViewName("jsp/search/pubmed1");    
         return mv;
     }
     
-    @RequestMapping("/pubmed/{key}/{taxonomy}/{startDate}/{endDate}/{start}/{rows}")
-    public ModelAndView pubmed(@PathVariable("key") String key,@PathVariable("taxonomy") String taxonomy,@PathVariable("startDate") String startDate ,@PathVariable("endDate") String endDate,@PathVariable("start") Integer start,@PathVariable("rows") Integer rows) {
-    	Map<String,Object> resultMap = this.searchService.querySolr(key,taxonomy,startDate,endDate,start,rows);
-    	List popularTaxonomies = new ArrayList<Taxonomy>();
-    	popularTaxonomies.add(taxonomyService.selectByPrimaryKey("9606"));
-    	popularTaxonomies.add(taxonomyService.selectByPrimaryKey("10090"));
-    	popularTaxonomies.add(taxonomyService.selectByPrimaryKey("10116"));
-    	popularTaxonomies.add(taxonomyService.selectByPrimaryKey("9913"));
-    	popularTaxonomies.add(taxonomyService.selectByPrimaryKey("7955"));
-    	Long[] array = new Long[]{10l,20l,50l,100l};
-    	String[] yearArray = new String[]{"2017","2016","2015","2014","2013"};
-    	ModelAndView mv = new ModelAndView();
-    	mv.addObject("q",key);
-    	mv.addObject("taxonomy",taxonomy);
-    	mv.addObject("start",startDate);
-    	mv.addObject("end",endDate);
-    	mv.addObject("offset",start);
-    	mv.addObject("max",rows);
-    	mv.addObject("batch",false);
-    	mv.addObject("success",true);
-    	mv.addObject("ab",true);
-    	mv.addObject("hl",true);
-    	mv.addObject("sort","score");
-    	mv.addObject("order","desc");
-    	mv.addObject("numFound",resultMap.get("recordsTotal"));
-    	mv.addObject("records", resultMap.get("records"));
-    	mv.addObject("taxonomyStat", resultMap.get("taxonomyStat"));
-    	mv.addObject("yearStat", resultMap.get("yearStat"));
-    	mv.addObject("popularTaxonomies", popularTaxonomies);
-    	mv.addObject("yearArray", yearArray);
-    	mv.addObject("array", array);
-    	mv.setViewName("jsp/search/pubmed1");    
-        return mv;
+    @RequestMapping("/pubmed/{q}/{taxonomy}/{start}/{end}/{offset}/{max}")
+    public ModelAndView pubmed(@PathVariable("q") String q,@PathVariable("taxonomy") String taxonomy,@PathVariable("start") String start ,@PathVariable("end") String end,@PathVariable("offset") Integer offset,@PathVariable("max") Integer max) {
+    	return search(q,taxonomy,start,end,offset,max);
     }
     
     
