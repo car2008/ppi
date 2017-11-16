@@ -25,7 +25,8 @@
 					<div class="col-sm-2">
 						<form method="post">
 							<input type="hidden" name="offset" value="0" />
-							
+							<input type="hidden" name="q" value="${q }" />
+							<input type="hidden" name="max" value="${max }" />
 							<div class="sidebar">
 								<h4>
 									Popular species
@@ -72,7 +73,7 @@
 									<select id="taxonomy" name="taxonomy" style="width: 100%; margin-bottom: 20px;" onchange="taxonomyChange()">
 										<option value="">Other species</option>
 										<c:forEach items="${otherTaxonomies}" var="taxonomyStatRecord">
-											<option value="${taxonomyStatRecord.key}" ${taxonomy == taxonomyStatRecord.key ? 'selected' : ''}> (${taxonomyStatRecord.value})</option>
+											<option value="${taxonomyStatRecord.key}" ${taxonomy == taxonomyStatRecord.key ? 'selected' : ''}> ${taxonomyStatRecord.value['taxonomy']}(${taxonomyStatRecord.value['count']})</option>
 										</c:forEach>
 									</select>
 								</div>
@@ -498,7 +499,7 @@
 			function taxonomyChange() {
 				var taxonomyId = $('#taxonomy').val();
 				if (taxonomyId !== '') {
-					var taxonomyChangeUrl = "<a href='#'></a>";
+					var taxonomyChangeUrl = "${pageContext.request.contextPath}/pubmed/${q}/"+taxonomyId+"/*/*/0/${max}";
 					taxonomyChangeUrl = taxonomyChangeUrl.replace(/taxonomy=/, "taxonomy=" + taxonomyId)
 					window.location = taxonomyChangeUrl;
 				}

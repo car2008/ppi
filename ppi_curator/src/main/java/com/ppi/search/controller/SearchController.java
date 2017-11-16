@@ -1,6 +1,7 @@
 package com.ppi.search.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,22 +38,29 @@ public class SearchController {
     @RequestMapping(value = "search", method = RequestMethod.POST)
     @ResponseBody
     public ModelAndView search(@RequestParam("q") String q,@RequestParam("taxonomy") String taxonomy, @RequestParam("start") String start,@RequestParam("end") String end,@RequestParam("offset") Integer offset, @RequestParam("max") Integer max){
+    	if(taxonomy==null||"".equals(taxonomy)){
+    		taxonomy="*";
+    	}
     	Map<String,Object> resultMap = this.searchService.querySolr(q,taxonomy,start,end,offset,max);
     	Map<String,Object> otherTaxonomies = new HashMap<String,Object>();
-    	List<Taxonomy> allTaxonomies = taxonomyService.findAll();
-    	List popularTaxonomies = new ArrayList<Taxonomy>();
+    	List<Taxonomy> popularTaxonomies = new ArrayList<Taxonomy>();
+    	String[] taxArray = new String[]{"9606","10090","10116","9913","7955"};
     	popularTaxonomies.add(taxonomyService.selectByPrimaryKey("9606"));
     	popularTaxonomies.add(taxonomyService.selectByPrimaryKey("10090"));
     	popularTaxonomies.add(taxonomyService.selectByPrimaryKey("10116"));
     	popularTaxonomies.add(taxonomyService.selectByPrimaryKey("9913"));
     	popularTaxonomies.add(taxonomyService.selectByPrimaryKey("7955"));
-    	allTaxonomies.removeAll(popularTaxonomies);
-    	Map taxonomyStat = (Map) resultMap.get("taxonomyStat");
-    	for(Taxonomy tax:allTaxonomies){
-    		if(taxonomyStat.get(tax.getId())!=null){
-    			otherTaxonomies.put(tax.getId(), new HashMap());
-    		}
-    	}
+    	Map<String,Object> taxonomyStat = (Map) resultMap.get("taxonomyStat");
+		if(taxonomyStat!=null){
+	    	for(Map.Entry e:taxonomyStat.entrySet()){
+				if(!Arrays.asList(taxArray).contains(e.getKey())){
+					HashMap m = new HashMap();
+					m.put("taxonomy", taxonomyService.selectByPrimaryKey((String)e.getKey()).getScientificName());
+					m.put("count", e.getValue());
+					otherTaxonomies.put((String)e.getKey(), m);
+				}
+			}
+		}
     	Long[] array = new Long[]{10l,20l,50l,100l};
     	String[] yearArray = new String[]{"2017","2016","2015","2014","2013"};
     	System.out.println("resultMap:"+resultMap);
