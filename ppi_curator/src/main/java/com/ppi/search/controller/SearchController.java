@@ -37,9 +37,15 @@ public class SearchController {
      */
     @RequestMapping(value = "search", method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView search(@RequestParam("q") String q,@RequestParam("taxonomy") String taxonomy, @RequestParam("start") String start,@RequestParam("end") String end,@RequestParam("offset") Integer offset, @RequestParam("max") Integer max){
+    public ModelAndView search(@RequestParam("q") String q,@RequestParam("taxonomy") String taxonomy, @RequestParam("start") String start,@RequestParam("end") String end,@RequestParam("offset") Integer offset, @RequestParam("max") Integer max, @RequestParam("ab") Boolean ab, @RequestParam("hl") Boolean hl){
     	if(taxonomy==null||"".equals(taxonomy)){
     		taxonomy="*";
+    	}
+    	if(ab==null){
+    		ab=true;
+    	}
+    	if(hl==null){
+    		hl=true;
     	}
     	Map<String,Object> resultMap = this.searchService.querySolr(q,taxonomy,start,end,offset,max);
     	Map<String,Object> otherTaxonomies = new HashMap<String,Object>();
@@ -63,7 +69,7 @@ public class SearchController {
 		}
     	Long[] array = new Long[]{10l,20l,50l,100l};
     	String[] yearArray = new String[]{"2017","2016","2015","2014","2013"};
-    	System.out.println("resultMap:"+resultMap);
+    	//System.out.println("resultMap:"+resultMap);
     	ModelAndView mv = new ModelAndView();
     	mv.addObject("q",q);
     	mv.addObject("taxonomy",taxonomy);
@@ -73,8 +79,8 @@ public class SearchController {
     	mv.addObject("max",max);
     	mv.addObject("batch",false);
     	mv.addObject("success",true);
-    	mv.addObject("ab",true);
-    	mv.addObject("hl",true);
+    	mv.addObject("ab",ab);
+    	mv.addObject("hl",hl);
     	mv.addObject("sort","score");
     	mv.addObject("order","desc");
     	mv.addObject("numFound",resultMap.get("recordsTotal"));
@@ -89,9 +95,10 @@ public class SearchController {
         return mv;
     }
     
-    @RequestMapping("/pubmed/{q}/{taxonomy}/{start}/{end}/{offset}/{max}")
-    public ModelAndView pubmed(@PathVariable("q") String q,@PathVariable("taxonomy") String taxonomy,@PathVariable("start") String start ,@PathVariable("end") String end,@PathVariable("offset") Integer offset,@PathVariable("max") Integer max) {
-    	return search(q,taxonomy,start,end,offset,max);
+    @RequestMapping("/pubmed/{q}/{taxonomy}/{start}/{end}/{offset}/{max}/{flag}/{highlight}")
+    public ModelAndView pubmed(@PathVariable("q") String q,@PathVariable("taxonomy") String taxonomy,@PathVariable("start") String start ,@PathVariable("end") String end,@PathVariable("offset") Integer offset,@PathVariable("max") Integer max,@PathVariable("flag") Boolean flag,@PathVariable("highlight") Boolean highlight) {
+    	//System.out.println(ab+"\\\\\\\\\\\\");
+    	return search(q,taxonomy,start,end,offset,max,flag,highlight);
     }
     
     

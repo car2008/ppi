@@ -125,7 +125,7 @@ public class SearchServiceImpl implements SearchService{
             if (!"*".equals(endDate)) {
                 end1 = endDate+"T23:59:59Z";
             }
-           System.out.println(start1+"++++++++++++++++++++++="+end1);
+           //System.out.println(start1+"++++++++++++++++++++++="+end1);
     	   query.addFilterQuery("date:["+start1+" TO "+end1+"]");
        }
        
@@ -192,10 +192,10 @@ public class SearchServiceImpl implements SearchService{
            map.put("records", results);  
            map.put("taxonomyStat", taxonomyStat);
            map.put("yearStat",yearStat);
-           System.out.println(countMap.get("recordsTotal"));
+           /*System.out.println(countMap.get("recordsTotal"));
            System.out.println("map.size----"+results.size());
            System.out.println("taxonomyStat"+taxonomyStat);
-           System.out.println("yearStat"+yearStat);
+           System.out.println("yearStat"+yearStat);*/
            //httpSolrServer.shutdown();     
        } catch (Exception e) {  
            e.printStackTrace();  

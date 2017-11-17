@@ -41,7 +41,7 @@
 										<i class="fa fa-fw"></i>
 										All (${numFound})
 									</a> --%>
-									<a href="${pageContext.request.contextPath}/pubmed/${q}/*/*/*/0/${max}">
+									<a href="${pageContext.request.contextPath}/pubmed/${q}/*/*/*/0/${max}/${ab}/${hl}">
 										<i class="fa fa-fw"></i>
 										All (${numFound})
 									</a>
@@ -55,7 +55,7 @@
 											${popularTaxonomy.scientificName}(${taxonomyStat[popularTaxonomy.id]})
 										</c:when>
 										<c:otherwise>
-											<a href="${pageContext.request.contextPath}/pubmed/${q}/${popularTaxonomy.id}/*/*/0/${max}">
+											<a href="${pageContext.request.contextPath}/pubmed/${q}/${popularTaxonomy.id}/*/*/0/${max}/${ab}/${hl}">
 												<i class="fa fa-fw"></i>
 												<c:if test="${taxonomyStat[popularTaxonomy.id]>0}">
 													${popularTaxonomy.scientificName} (${taxonomyStat[popularTaxonomy.id]})
@@ -91,7 +91,7 @@
 										<i class="fa fa-fw"></i>
 										All (${numFound})
 									</a> --%>
-									<a href="${pageContext.request.contextPath}/pubmed/${q}/*/*/*/0/${max}">
+									<a href="${pageContext.request.contextPath}/pubmed/${q}/*/*/*/0/${max}/${ab}/${hl}">
 										<i class="fa fa-fw"></i>
 										All (${numFound})
 									</a>
@@ -105,7 +105,7 @@
 											${year} (${yearStat["${year}"]})
 										</c:when>
 										<c:otherwise>
-											<a href="${pageContext.request.contextPath}/pubmed/${q}/*/${year}-01-01/${year}-12-31/0/${max}">
+											<a href="${pageContext.request.contextPath}/pubmed/${q}/*/${year}-01-01/${year}-12-31/0/${max}/${ab}/${hl}">
 												<i class="fa fa-fw"></i>
 												<c:if test="${yearStat[year]>0}">
 													${year} (${yearStat[year]})
@@ -166,7 +166,7 @@
 													<i class="fa fa-fw"></i>
 													Summary
 												</a> --%>
-												<a href="pubmed/${params}/false">
+												<a href="${pageContext.request.contextPath}/pubmed/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/false/${hl}">
 													<i class="fa fa-fw"></i>
 													Summary
 												</a>
@@ -190,9 +190,9 @@
 													<i class="fa fa-fw"></i>
 													Abstract
 												</a> --%>
-												<a href="pubmed/${params}/true">
+												<a href="${pageContext.request.contextPath}/pubmed/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/true/${hl}">
 													<i class="fa fa-fw"></i>
-													Summary
+													Abstract
 												</a>
 											</li>
 										</c:otherwise>
@@ -226,7 +226,7 @@
 													<i class="fa fa-fw"></i>
 													No keyword highlight
 												</a> --%>
-												<a href="pubmed/${params}/false">
+												<a href="${pageContext.request.contextPath}/pubmed/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/false">
 													<i class="fa fa-fw"></i>
 													No keyword highlight
 												</a>
@@ -238,7 +238,7 @@
 													<i class="fa fa-fw"></i>
 													Highlight keyword
 												</a> --%>
-												<a href="pubmed/${q}/true">
+												<a href="${pageContext.request.contextPath}/pubmed/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/true">
 													<i class="fa fa-fw"></i>
 													Highlight keyword
 												</a>
@@ -372,7 +372,7 @@
 										<div>
 											PMID: ${record.value['pmid']}
 										</div>
-										<div class="article-abstract ${ab ? '' : 'hidden'}" style="text-align: justify;">
+										<div class="article-abstract ${ab==true ? '' : 'hidden'}" style="text-align: justify;">
 											${record.value['abstract']}
 										</div>
 									</div>
@@ -499,7 +499,7 @@
 			function taxonomyChange() {
 				var taxonomyId = $('#taxonomy').val();
 				if (taxonomyId !== '') {
-					var taxonomyChangeUrl = "${pageContext.request.contextPath}/pubmed/${q}/"+taxonomyId+"/*/*/0/${max}";
+					var taxonomyChangeUrl = "${pageContext.request.contextPath}/pubmed/${q}/"+taxonomyId+"/*/*/0/${max}/${ab}";
 					taxonomyChangeUrl = taxonomyChangeUrl.replace(/taxonomy=/, "taxonomy=" + taxonomyId)
 					window.location = taxonomyChangeUrl;
 				}
