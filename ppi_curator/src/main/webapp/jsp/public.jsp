@@ -264,7 +264,9 @@ div.label {
 											<input type="hidden" name="offset" value="0" /> 
 											<input type="hidden" name="max" value="10" />
 											<input type="hidden" name="ab" value="true" />  
-											<input type="hidden" name="hl" value="true" />  
+											<input type="hidden" name="hl" value="true" /> 
+											<input type="hidden" name="sort" value="score" />  
+											<input type="hidden" name="order" value="desc" />  
 										</td>
 										<td style="width: 80px; padding: 0 2px;">
 											<button type="submit" class="btn btn-xs btn-primary" onclick="initSearch(); return true;">Search</button>

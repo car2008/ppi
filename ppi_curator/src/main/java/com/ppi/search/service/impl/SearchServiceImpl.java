@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.ppi.search.mapper.LinkMapper;
+import com.ppi.search.mapper.TaxonomyMapper;
 import com.ppi.search.pojo.Result;
+import com.ppi.search.pojo.Taxonomy;
 import com.ppi.search.service.SearchService;
 
 @Service
@@ -36,7 +39,8 @@ public class SearchServiceImpl implements SearchService{
     private static Logger logger = Logger.getLogger(SearchServiceImpl.class);
     @Autowired
     private HttpSolrServer httpSolrServer;
-
+    @Autowired
+	private TaxonomyMapper taxonomyMapper;
    /**
     * 新增数据到solr服务
     * @param resultInstance
@@ -95,11 +99,11 @@ public class SearchServiceImpl implements SearchService{
    }
    
    @Override
-   public Map<String,Object> querySolr(String key,String taxonomy,String startDate,String endDate,int start,int rows){
+   public Map<String,Object> querySolr(String key,String taxonomy,String startDate,String endDate,int start,int rows,Boolean hl,String sort,String order){
 	   Map<String,Object> countMap = facetQueryCount(key);
        SolrQuery query = new SolrQuery();    
        SolrDocumentList list = new SolrDocumentList();  
-       Map<String,Object> map = new HashMap<String, Object>(); 
+       Map<String,Object> map = new LinkedHashMap<String, Object>(); 
        Map<String,Long> taxonomyStat = (Map<String, Long>) countMap.get("taxonomyStat");  
        Map<String,Long> yearStat = (Map<String, Long>) countMap.get("yearStat");  
        String params="";  
@@ -133,19 +137,25 @@ public class SearchServiceImpl implements SearchService{
    	       query.addFilterQuery("taxonomy:"+taxonomy);
        }
        
+       query.setSort(sort,"desc".equals(order)? ORDER.desc:ORDER.asc);
        query.setStart(start);  
        query.setRows(rows);  
        
        //设置高亮  
-       query.setHighlight(true); // 开启高亮组件  
-       query.set("hl.highlightMultiTerm","true");//启用多字段高亮  
-       query.addHighlightField("abstract");// 高亮字段  
-       query.addHighlightField("title");// 高亮字段  
-       query.setHighlightSimplePre("<font color='red'>");//标记，高亮关键字前缀  
-       query.setHighlightSimplePost("</font>");//后缀  
-       query.setHighlightSnippets(2);//结果分片数，默认为1  
-       query.setHighlightFragsize(1000);//每个分片的最大长度，默认为100  
-       
+       if(hl){
+	       query.setHighlight(true); // 开启高亮组件  
+	       query.set("hl.fl","*");
+	       query.set("hl.fragsize","0");
+	       query.set("hl.mergeContiguous","true");
+	       query.set("hl.usePhraseHighlighter","true");
+	       query.set("hl.highlightMultiTerm","true");//启用多字段高亮  
+	       query.addHighlightField("abstract");// 高亮字段  
+	       query.addHighlightField("title");// 高亮字段  
+	       query.setHighlightSimplePre("<em>");//标记，高亮关键字前缀  
+	       query.setHighlightSimplePost("</em>");//后缀  
+	       /*query.setHighlightSnippets(1);//结果分片数，默认为1  
+	       query.setHighlightFragsize(1000);//每个分片的最大长度，默认为100*/  
+       }
        //分片信息  
        query.setFacet(true)  
            .setFacetMinCount(1)  
@@ -161,25 +171,29 @@ public class SearchServiceImpl implements SearchService{
            System.out.println("============" +list.toString()); 
            logger.info("counts:"+countMap.get("recordsTotal"));  
            //获取所有高亮的字段  
-           Map<String,Map<String,List<String>>> highlightMap=response.getHighlighting();  
-           for (SolrDocument sd : list) {  
-               if(null!=highlightMap.get(sd.getFieldValue("pmid").toString()).get("title")){  
-                   sd.setField("title",highlightMap.get(sd.getFieldValue("pmid").toString()).get("title").toString());                    
-               }  
-               if(null!=highlightMap.get(sd.getFieldValue("pmid").toString()).get("abstract")){  
-                   sd.setField("abstract", highlightMap.get(sd.getFieldValue("pmid").toString()).get("abstract").toString());   
-               }  
-   
-           }   
+           if(hl){
+	           Map<String,Map<String,List<String>>> highlightMap=response.getHighlighting();  
+	           for (SolrDocument sd : list) {  
+	               if(null!=highlightMap.get(sd.getFieldValue("pmid").toString()).get("title")){  
+	                   sd.setField("title",highlightMap.get(sd.getFieldValue("pmid").toString()).get("title").toString());                    
+	               }  
+	               if(null!=highlightMap.get(sd.getFieldValue("pmid").toString()).get("abstract")){  
+	                   sd.setField("abstract", highlightMap.get(sd.getFieldValue("pmid").toString()).get("abstract").toString());   
+	               }  
+	   
+	           }
+           }
            DocumentObjectBinder binder = new DocumentObjectBinder();             
            List<Result> nlist = binder.getBeans(Result.class, list); 
-           Map results = new HashMap<String,Object>(); 
+           Map results = new LinkedHashMap<String,Object>(); 
            for(Result result:nlist){
-        	   Map reMap = new HashMap<String,Object>(); 
+        	   Map reMap = new LinkedHashMap<String,Object>(); 
         	   reMap.put("title",result.getTitle() );
         	   reMap.put("date",result.getDate() );
         	   reMap.put("year",result.getYear() );
         	   reMap.put("taxonomy",result.getTaxonomy() );
+        	   Taxonomy t = taxonomyMapper.selectByPrimaryKey(result.getTaxonomy());
+        	   reMap.put("taxonomyName",t==null?"N/A":t.getScientificName() );
         	   reMap.put("journal",result.getJournal() );
         	   reMap.put("ref",result.getRef() );
         	   reMap.put("proteinnames",result.getProteinnames() );
@@ -192,10 +206,6 @@ public class SearchServiceImpl implements SearchService{
            map.put("records", results);  
            map.put("taxonomyStat", taxonomyStat);
            map.put("yearStat",yearStat);
-           /*System.out.println(countMap.get("recordsTotal"));
-           System.out.println("map.size----"+results.size());
-           System.out.println("taxonomyStat"+taxonomyStat);
-           System.out.println("yearStat"+yearStat);*/
            //httpSolrServer.shutdown();     
        } catch (Exception e) {  
            e.printStackTrace();  
@@ -210,13 +220,11 @@ public class SearchServiceImpl implements SearchService{
     */
    
    public Map<String,Object> facetQueryCount(String key) {
-	   Map<String,Object> facetStat = new HashMap<String, Object>();
-	   Map<String,Long> taxonomyStat = new HashMap<String, Long>();  
-       Map<String,Long> yearStat = new HashMap<String, Long>(); 
+	   Map<String,Object> facetStat = new LinkedHashMap<String, Object>();
+	   Map<String,Long> taxonomyStat = new LinkedHashMap<String, Long>();  
+       Map<String,Long> yearStat = new LinkedHashMap<String, Long>(); 
        SolrQuery params = new SolrQuery();
        params.setQuery(key);
-       //排序
-       //params.addSortField("id", ORDER.asc);
        params.setStart(0);
        params.setRows(200);
        //Facet为solr中的层次分类查询
@@ -224,7 +232,6 @@ public class SearchServiceImpl implements SearchService{
        params.setFacet(true)
            .setFacetMinCount(1)
            .setFacetLimit(1000)//段
-           //.setFacetPrefix("cor")//查询taxonomy、year中关键字前缀是cor的
            .addFacetField("taxonomy")
            .addFacetField("year");//分片字段
     
@@ -242,7 +249,7 @@ public class SearchServiceImpl implements SearchService{
         	   Count ct=(Count)yearits.next();
         	   yearStat.put(ct.getName(), ct.getCount());
            }
-           System.out.println(yearStat);
+           ///System.out.println(yearStat);
        }catch(Exception e){
     	   e.printStackTrace();
        }

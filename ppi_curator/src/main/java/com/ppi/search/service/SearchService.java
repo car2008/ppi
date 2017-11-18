@@ -12,6 +12,6 @@ public interface SearchService {
 
    public List<Result> search(String keywords, Integer page, Integer rows) throws Exception;
    
-   public Map<String,Object> querySolr(String key,String taxonomy,String startDate,String endDate,int start,int size);
+   public Map<String,Object> querySolr(String key,String taxonomy,String startDate,String endDate,int start,int size,Boolean hl,String sort,String order);
 
 }

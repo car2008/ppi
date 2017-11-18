@@ -2,7 +2,7 @@ package com.ppi.search.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +37,7 @@ public class SearchController {
      */
     @RequestMapping(value = "search", method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView search(@RequestParam("q") String q,@RequestParam("taxonomy") String taxonomy, @RequestParam("start") String start,@RequestParam("end") String end,@RequestParam("offset") Integer offset, @RequestParam("max") Integer max, @RequestParam("ab") Boolean ab, @RequestParam("hl") Boolean hl){
+    public ModelAndView search(@RequestParam("q") String q,@RequestParam("taxonomy") String taxonomy, @RequestParam("start") String start,@RequestParam("end") String end,@RequestParam("offset") Integer offset, @RequestParam("max") Integer max, @RequestParam("ab") Boolean ab, @RequestParam("hl") Boolean hl,@RequestParam("sort") String sort,@RequestParam("order") String order){
     	if(taxonomy==null||"".equals(taxonomy)){
     		taxonomy="*";
     	}
@@ -47,8 +47,14 @@ public class SearchController {
     	if(hl==null){
     		hl=true;
     	}
-    	Map<String,Object> resultMap = this.searchService.querySolr(q,taxonomy,start,end,offset,max);
-    	Map<String,Object> otherTaxonomies = new HashMap<String,Object>();
+    	if(sort==null){
+    		sort="score";
+    	}
+    	if(order==null){
+    		order="desc";
+    	}
+    	Map<String,Object> resultMap = this.searchService.querySolr(q,taxonomy,start,end,offset,max,hl,sort,order);
+    	Map<String,Object> otherTaxonomies = new LinkedHashMap<String,Object>();
     	List<Taxonomy> popularTaxonomies = new ArrayList<Taxonomy>();
     	String[] taxArray = new String[]{"9606","10090","10116","9913","7955"};
     	popularTaxonomies.add(taxonomyService.selectByPrimaryKey("9606"));
@@ -60,7 +66,7 @@ public class SearchController {
 		if(taxonomyStat!=null){
 	    	for(Map.Entry e:taxonomyStat.entrySet()){
 				if(!Arrays.asList(taxArray).contains(e.getKey())){
-					HashMap m = new HashMap();
+					LinkedHashMap m = new LinkedHashMap();
 					m.put("taxonomy", taxonomyService.selectByPrimaryKey((String)e.getKey()).getScientificName());
 					m.put("count", e.getValue());
 					otherTaxonomies.put((String)e.getKey(), m);
@@ -81,8 +87,8 @@ public class SearchController {
     	mv.addObject("success",true);
     	mv.addObject("ab",ab);
     	mv.addObject("hl",hl);
-    	mv.addObject("sort","score");
-    	mv.addObject("order","desc");
+    	mv.addObject("sort",sort);
+    	mv.addObject("order",order);
     	mv.addObject("numFound",resultMap.get("recordsTotal"));
     	mv.addObject("records", resultMap.get("records"));
     	mv.addObject("taxonomyStat", resultMap.get("taxonomyStat"));
@@ -95,10 +101,10 @@ public class SearchController {
         return mv;
     }
     
-    @RequestMapping("/pubmed/{q}/{taxonomy}/{start}/{end}/{offset}/{max}/{flag}/{highlight}")
-    public ModelAndView pubmed(@PathVariable("q") String q,@PathVariable("taxonomy") String taxonomy,@PathVariable("start") String start ,@PathVariable("end") String end,@PathVariable("offset") Integer offset,@PathVariable("max") Integer max,@PathVariable("flag") Boolean flag,@PathVariable("highlight") Boolean highlight) {
+    @RequestMapping("/pubmed/{q}/{taxonomy}/{start}/{end}/{offset}/{max}/{flag}/{highlight}/{sorts}/{orders}")
+    public ModelAndView pubmed(@PathVariable("q") String q,@PathVariable("taxonomy") String taxonomy,@PathVariable("start") String start ,@PathVariable("end") String end,@PathVariable("offset") Integer offset,@PathVariable("max") Integer max,@PathVariable("flag") Boolean flag,@PathVariable("highlight") Boolean highlight,@PathVariable("sorts") String sorts,@PathVariable("orders") String orders) {
     	//System.out.println(ab+"\\\\\\\\\\\\");
-    	return search(q,taxonomy,start,end,offset,max,flag,highlight);
+    	return search(q,taxonomy,start,end,offset,max,flag,highlight,sorts,orders);
     }
     
     
