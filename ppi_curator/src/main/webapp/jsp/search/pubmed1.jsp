@@ -360,6 +360,27 @@
 							<%-- <div class="text-center">
 								<ppi_curator:paginate maxsteps="5" params="${['taxonomy': params.taxonomy, 'hl': params.hl, 'ab': params.ab, 'start': params.start, 'end': params.end]}" total="${recordsTotal}" />
 							</div> --%>
+							
+							<div class="text-center">
+						        <nav>
+						            <ul class="pagination">
+						                <li><a href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/1/${numFound}">首页</a></li>
+						                <li><a href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${page-1>1?page-1:1}/${numFound}">&laquo;</a></li>
+						
+						                <c:forEach begin="1" end="${totalPages}" varStatus="loop">
+						                    <c:set var="active" value="${loop.index==page?'active':''}"/>
+						                    <li class="${active}"><a
+						                            href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${loop.index}/${numFound}">${loop.index}</a>
+						                    </li>
+						                </c:forEach>
+						                <li>
+						                    <a href="<c:url value="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${page+1<totalPages?page+1:totalPages}/${numFound}"/>">&raquo;</a>
+						                </li>
+						                <li><a href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${totalPages}/${numFound}">尾页</a></li>
+						            </ul>
+						        </nav>
+						    </div>
+							
 						</c:if>
 					</div>
 					<div class="col-sm-2">

@@ -77,6 +77,9 @@ public class SearchController {
     	String[] yearArray = new String[]{"2017","2016","2015","2014","2013"};
     	//System.out.println("resultMap:"+resultMap);
     	ModelAndView mv = new ModelAndView();
+    	int totals = (int)resultMap.get("recordsTotal");
+    	mv.addObject("page",1);
+    	mv.addObject("totalPages",totals % max == 0 ? totals / max : totals / max + 1);
     	mv.addObject("q",q);
     	mv.addObject("taxonomy",taxonomy);
     	mv.addObject("start",start);
@@ -89,7 +92,7 @@ public class SearchController {
     	mv.addObject("hl",hl);
     	mv.addObject("sort",sort);
     	mv.addObject("order",order);
-    	mv.addObject("numFound",resultMap.get("recordsTotal"));
+    	mv.addObject("numFound",totals);
     	mv.addObject("records", resultMap.get("records"));
     	mv.addObject("taxonomyStat", resultMap.get("taxonomyStat"));
     	mv.addObject("yearStat", resultMap.get("yearStat"));
@@ -106,6 +109,29 @@ public class SearchController {
     	//System.out.println(ab+"\\\\\\\\\\\\");
     	return search(q,taxonomy,start,end,offset,max,flag,highlight,sorts,orders);
     }
-    
+    @RequestMapping("/getpage/{q}/{taxonomy}/{start}/{end}/{offset}/{max}/{flag}/{highlight}/{sorts}/{orders}/{currentPages}/{totals}")
+    public ModelAndView getPage(@PathVariable("q") String q,@PathVariable("taxonomy") String taxonomy,@PathVariable("start") String start ,@PathVariable("end") String end,@PathVariable("offset") Integer offset,@PathVariable("max") Integer max,@PathVariable("flag") Boolean flag,@PathVariable("highlight") Boolean highlight,@PathVariable("sorts") String sorts,@PathVariable("orders") String orders,@PathVariable("currentPages") String currentPages,@PathVariable("totals")int totals){
+    	int page;
+        try {
+            //当前页数
+            page = Integer.valueOf(currentPages);
+        } catch (NumberFormatException e) {
+            page = 1;
+        }
+        //总数
+        int totalRecords = totals;
+        //每页数
+        int recordPerPage = max;
+        //总页数
+        int totalPages = totalRecords % recordPerPage == 0 ? totalRecords / recordPerPage : totalRecords / recordPerPage + 1;
+        //本页起始序号
+        int beginIndex = (page - 1) * recordPerPage;
+        //本页末尾序号的下一个
+        int endIndex = beginIndex + recordPerPage;
+        if (endIndex > totalRecords)endIndex = totalRecords;
+        ModelAndView mv =search(q,taxonomy,start,end,beginIndex,max,flag,highlight,sorts,orders);
+        mv.addObject("page",page);
+        return mv;
+    }
     
 }

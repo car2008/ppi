@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.ppi.parent</groupId>
-  <artifactId>ppi_curator</artifactId>
+  <artifactId>ppi_curator_dev</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
 
-  <name>ppi_curator</name>
+  <name>ppi_curator_dev</name>
   <url>http://maven.apache.org</url>
 
 
