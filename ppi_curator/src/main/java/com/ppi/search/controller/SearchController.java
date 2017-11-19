@@ -78,6 +78,15 @@ public class SearchController {
     	//System.out.println("resultMap:"+resultMap);
     	ModelAndView mv = new ModelAndView();
     	int totals = (int)resultMap.get("recordsTotal");
+    	Map taxonomyMap = (Map)resultMap.get("taxonomyStat");
+    	Map yearMap = (Map)resultMap.get("yearStat");
+    	if(!"*".equals(taxonomy)){
+    		totals = (int)taxonomyMap.get(taxonomy);
+    	}
+    	if(!"*".equals(start)||!"*".equals(end)){
+    		String year = "*".equals(start)?end.substring(0,end.indexOf("-")):start.substring(0,start.indexOf("-"));
+    		totals = (int)yearMap.get(year);
+    	}
     	mv.addObject("page",1);
     	mv.addObject("totalPages",totals % max == 0 ? totals / max : totals / max + 1);
     	mv.addObject("q",q);
@@ -92,7 +101,8 @@ public class SearchController {
     	mv.addObject("hl",hl);
     	mv.addObject("sort",sort);
     	mv.addObject("order",order);
-    	mv.addObject("numFound",totals);
+    	mv.addObject("totalNum", totals);
+    	mv.addObject("numFound",resultMap.get("recordsTotal"));
     	mv.addObject("records", resultMap.get("records"));
     	mv.addObject("taxonomyStat", resultMap.get("taxonomyStat"));
     	mv.addObject("yearStat", resultMap.get("yearStat"));

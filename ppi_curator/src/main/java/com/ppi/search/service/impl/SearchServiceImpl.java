@@ -221,8 +221,8 @@ public class SearchServiceImpl implements SearchService{
    
    public Map<String,Object> facetQueryCount(String key) {
 	   Map<String,Object> facetStat = new LinkedHashMap<String, Object>();
-	   Map<String,Long> taxonomyStat = new LinkedHashMap<String, Long>();  
-       Map<String,Long> yearStat = new LinkedHashMap<String, Long>(); 
+	   Map<String,Integer> taxonomyStat = new LinkedHashMap<String, Integer>();  
+       Map<String,Integer> yearStat = new LinkedHashMap<String, Integer>(); 
        SolrQuery params = new SolrQuery();
        params.setQuery(key);
        params.setStart(0);
@@ -242,12 +242,12 @@ public class SearchServiceImpl implements SearchService{
            Iterator taxits=response1.getFacetField("taxonomy").getValues().iterator();
            while(taxits.hasNext()){
         	   Count ct=(Count)taxits.next();
-        	   taxonomyStat.put(ct.getName(), ct.getCount());
+        	   taxonomyStat.put(ct.getName(), (int)ct.getCount());
            }
            Iterator yearits=response1.getFacetField("year").getValues().iterator();
            while(yearits.hasNext()){
         	   Count ct=(Count)yearits.next();
-        	   yearStat.put(ct.getName(), ct.getCount());
+        	   yearStat.put(ct.getName(), (int)ct.getCount());
            }
            ///System.out.println(yearStat);
        }catch(Exception e){

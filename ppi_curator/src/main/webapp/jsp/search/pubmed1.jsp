@@ -23,10 +23,14 @@
 			<c:when test="${success}">
 				<div class="row">
 					<div class="col-sm-2">
-						<form method="post">
+						<form action="${pageContext.request.contextPath}/search" method="post" controller="search">
 							<input type="hidden" name="offset" value="0" />
 							<input type="hidden" name="q" value="${q }" />
 							<input type="hidden" name="max" value="${max }" />
+							<input type="hidden" name="ab" value="${ab }" />  
+							<input type="hidden" name="hl" value="${hl }" /> 
+							<input type="hidden" name="sort" value="${sort }" />  
+							<input type="hidden" name="order" value="${order }" />
 							<div class="sidebar">
 								<h4>
 									Popular species
@@ -360,27 +364,71 @@
 							<%-- <div class="text-center">
 								<ppi_curator:paginate maxsteps="5" params="${['taxonomy': params.taxonomy, 'hl': params.hl, 'ab': params.ab, 'start': params.start, 'end': params.end]}" total="${recordsTotal}" />
 							</div> --%>
+							<c:if test="${totalNum>max }">
+								<div class="text-center">
+							        <nav>
+							            <ul class="pagination">
+							                <li><a href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/1/${totalNum}">首页</a></li>
+							                <li><a href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${page-1>1?page-1:1}/${totalNum}">&laquo;</a></li>
 							
-							<div class="text-center">
-						        <nav>
-						            <ul class="pagination">
-						                <li><a href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/1/${numFound}">首页</a></li>
-						                <li><a href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${page-1>1?page-1:1}/${numFound}">&laquo;</a></li>
-						
-						                <c:forEach begin="1" end="${totalPages}" varStatus="loop">
-						                    <c:set var="active" value="${loop.index==page?'active':''}"/>
-						                    <li class="${active}"><a
-						                            href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${loop.index}/${numFound}">${loop.index}</a>
-						                    </li>
-						                </c:forEach>
-						                <li>
-						                    <a href="<c:url value="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${page+1<totalPages?page+1:totalPages}/${numFound}"/>">&raquo;</a>
-						                </li>
-						                <li><a href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${totalPages}/${numFound}">尾页</a></li>
-						            </ul>
-						        </nav>
-						    </div>
-							
+							                <c:choose>
+												<c:when test="${totalPages<10}">
+													<c:forEach begin="1" end="${totalPages}" varStatus="loop">
+											            <c:set var="active" value="${loop.index==page?'active':''}"/>
+											            <li class="${active}"><a
+											                    href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${loop.index}/${totalNum}">${loop.index}</a>
+											            </li>
+											        </c:forEach>
+											    </c:when>
+											    <c:otherwise>
+											    	<c:if test="${page<5 }">
+											    		<c:forEach begin="1" end="5" varStatus="loop">
+												            <c:set var="active" value="${loop.index==page?'active':''}"/>
+												            <li class="${active}"><a
+												                    href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${loop.index}/${totalNum}">${loop.index}</a>
+												            </li>
+												        </c:forEach>
+												        <li class=""><a>...</a></li>
+											    	</c:if>
+											    	<c:if test="${page>=5 && page<=totalPages-4 }">
+											    		<li class=""><a>...</a></li>
+											    		<li class="">
+											    			<a href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${page-2}/${totalNum}">${page-2}</a>
+											            </li>
+											    		<li class="">
+											    			<a href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${page-1}/${totalNum}">${page-1}</a>
+											            </li>
+											            <li class="active">
+											            	<a href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${page}/${totalNum}">${page}</a>
+											            </li>
+											            <li class="">
+											            	<a href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${page+1}/${totalNum}">${page+1}</a>
+											            </li>
+											            <li class="">
+											    			<a href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${page+2}/${totalNum}">${page+2}</a>
+											            </li>
+											    	    <li class=""><a>...</a></li>
+											    	</c:if>
+											    	<c:if test="${page>totalPages-4 }">
+											    		<li class=""><a>...</a></li>
+											    		<c:forEach begin="${totalPages-4 }" end="${totalPages }" varStatus="loop">
+												            <c:set var="active" value="${loop.index==page?'active':''}"/>
+												            <li class="${active}"><a
+												                    href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${loop.index}/${totalNum}">${loop.index}</a>
+												            </li>
+												        </c:forEach>
+											    	</c:if>
+											    </c:otherwise>
+											</c:choose>
+											
+							                <li>
+							                    <a href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${page+1<totalPages?page+1:totalPages}/${totalNum}">&raquo;</a>
+							                </li>
+							                <li><a href="${pageContext.request.contextPath}/getpage/${q}/${taxonomy}/${start}/${end}/${offset}/${max}/${ab}/${hl}/${sort}/${order}/${totalPages}/${totalNum}">尾页</a></li>
+							            </ul>
+							        </nav>
+							    </div>
+							</c:if>
 						</c:if>
 					</div>
 					<div class="col-sm-2">
